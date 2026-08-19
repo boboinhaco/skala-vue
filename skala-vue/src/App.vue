@@ -1,5 +1,6 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
+
 let normalCount = 0
 const vueCount = ref(0)
 const welcomeMessage = 'Welcome to Skala-Vue'
@@ -76,6 +77,21 @@ const lazyText = ref('')
 const age = ref('')
 const userEmail = ref('')
 const price = ref('')
+
+const name = ref('홍길동')
+const isActive = ref(true)
+const items = ref(['사과', '배'])
+const user = ref({ name: '이순신', age: 30 })
+const increaseRef = () => { count.value++ }
+const changeUserName = () => { user.value.name = '장보고' }
+
+const userReactive = reactive({ name: '이순신', age: 30, })
+const celebrateReactive = () => { userReactive.age++ }
+const items1 = reactive(['사과', '바나나'])
+// const addItem = () => { items1.push(`과일 ${items1.length + 1}`) } -> 배열 길이 때문에 삭제해도 하나 더 생김
+let fruitSeq = 2 
+const addItem = () => { items1.push(`과일 ${++fruitSeq}`) }
+const removeItem = (index) => { items1.splice(index, 1) }
 </script>
 
 <template>
@@ -317,6 +333,34 @@ const price = ref('')
       <h2>Scoped 스타일 및 외부 CSS 활용</h2>
       <p class="title">이 글자는 이 컴포넌트 내부에서만 빨간색이 됩니다.</p>
       <button class="btn-external">외부 CSS에서 불러온 버튼 스타일</button>
+    </div>
+
+    <div class="practice-section">
+      <h2>반응형 상태 ref() 기초</h2>
+      <p>Ref 카운트: <strong>{{ count }}</strong></p>
+      <p>이름: <input v-model="name" />{{ name }}</p>
+      <p>활성 상태: {{ isActive ? '활성' : '비활성' }}</p>
+      <p>과일 목록: {{ items.join(', ') }}</p>
+      <p>사용자 정보: 이름- {{ user.name }}, 나이- {{ user.age }}</p>
+      <button @click="increaseRef">Ref 변수 증가</button>
+      <button @click="isActive = !isActive">토글</button>
+      <button @click="items.push('귤')">과일 추가</button>
+      <button @click="changeUserName">사용자 이름 변경</button>
+    </div>
+
+    <div class="practice-section">
+      <h2>반응형 상태 reactive() 특징 및 주의점</h2>
+      <h3>1) 객체(Object) reactive</h3>
+      <p>이름: {{ userReactive.name }} / 나이: {{ userReactive.age }}세</p>
+      <button @click="celebrateReactive">reactive 나이 한 살 추가</button>
+      <h3>2) 배열(Array) reactive</h3>
+      <ul>
+        <li v-for="(item, index) in items1" :key="index">
+          {{ item }}
+          <button @click="removeItem(index)" style="margin-left: 8px; padding: 2px 6px">삭제</button>
+        </li>
+      </ul>
+      <button @click="addItem">과일 항목 추가</button>
     </div>
   </header>
 </template>
