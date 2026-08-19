@@ -40,7 +40,7 @@ const showDetail = (cityName, status) => {
             </div>
         </section>>
 
-        <div class="status-bar"> {{ selectedCityInfo }}</div>
+        <div class="status-bar">{{ selectedCityInfo }}</div>
     </div>
 
 </template>
