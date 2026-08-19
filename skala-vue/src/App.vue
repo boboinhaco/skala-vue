@@ -1,85 +1,260 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { ref } from 'vue'
+let normalCount = 0
+const vueCount = ref(0)
+const welcomeMessage = 'Welcome to Skala-Vue'
+const rawHtmlData = '이 글자는 <span style="color: red; font-weight: bold;">빨간색 굵은 글자 </span>이다.'
+
+const inputValue = ref('')
+const message = ref('')
+function showMessage() {
+  message.value = inputValue.value
+}
+
+const content = '안녕하세요! <strong>Skala-Vue</strong>강의입니다.'
+
+const dynamicUrl = 'https://www.naver.com'
+const logoImSrc = 'https://vuejs.org/images/logo.png'
+const isButtonDisabled = ref(true)
+
+const isWarning = ref(false)
+const themeClass = ref('bg-dark')
+
+const textColor = ref('purple')
+const boxWidth = ref(150)
+const baseBoxStyle = ref({
+  backgroundColor: '#42b883',
+  height: '100px',
+  transition: 'all 0.3s ease',
+})
+
+const id = 'user-profile-card'
+const src = 'https://vuejs.org/images/logo.png'
+
+const isLogged = ref(false)
+const score = ref(85)
+
+const inVisible = ref(true)
+
+const count = ref(0)
+const showAlert = () => {
+  alert('함수가 성공적으로 호출되었습니다!')
+}
+
+const position = ref('')
+const tagName = ref('')
+const getOnlyEvent = (e) => {
+  position.value = `좌표: X=${e.clientX}, Y=${e.clientY}`
+}
+const getWithParam = (name, e) => {
+  tagName.value = `대상: ${name} / 클릭된 태그: ${e.target.tagName}`
+}
+
+const handleLink = () => {
+  alert('수식어 덕분에 네이버로 이동하지 않고 함수만 실행됩니다!')
+}
+const handleBox = () => {
+  alert('부모 박스가 클릭되었습니다!')
+}
+const handleChild1 = () => {
+  alert('1번 자식 클릭!')
+}
+const handleChild2 = () => {
+  alert('2번 자식 클릭!')
+}
 </script>
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+    <div class="practice-section">
+      <h2>Hello Skala-Vue</h2>
+      <h3>일반 변수 클릭: {{ normalCount }}</h3>
+      <button @click="normalCount++">일반 변수 증가</button>
+      <br />
+      <h3>Vue 반응성 변수 클릭: {{ vueCount }}</h3>
+      <button @click="vueCount++">Vue 반응성 변수 증가</button>
+    </div>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+    <div class="practice-section">
+      <h2>{{ welcomeMessage }}</h2>
+      <p>{{ welcomeMessage.toUpperCase() }}</p>
+      <p>{{ 'Random number: ' + Math.ceil(Math.random() * 100) }}</p>
+    </div>
 
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
+    <div class="practice-section">
+      <h2>v-html 디렉티브 학습</h2>
+      <h3>일반 보간법 {{ }} 사용 결과:</h3>
+      <p>{{ rawHtmlData }}</p>
+      <br />
+      <h3>v-html 디렉티브 사용 결과:</h3>
+      <p v-html="rawHtmlData"></p>
+    </div>
+
+    <div class="practice-section">
+      <h2>v-html XSS 학습</h2>
+      <input v-model="inputValue" placeholder="내용을 입력하세요" />
+      <button @click="showMessage">확인</button>
+      <div v-html="message"></div>
+    </div>
+
+    <div class="practice-section">
+      <h2>v-text 디렉티브 학습</h2>
+      <h3>1) 일반 보간법 {{ }} 결과: </h3>
+      <p>출력: {{ content }}</p>
+      <br />
+
+      <h3>2) v-text 디렉티브 사용 결과:</h3>
+      <p v-text="'출력: ' + content"></p>
+      <br />
+
+      <h3>3) v-html 결과 비교:</h3>
+      <p v-html="content"></p>
+    </div>
+
+    <div class="practice-section">
+      <h2>v-bind 디렉티브 기본 (축약형: 콜론)</h2>
+      <h3>1) 동적 링크 연결</h3>
+      <a :href="dynamicUrl">여기를 클릭하면 네이버로 이동합니다</a>
+      <br />
+
+      <h3>2) 동적 이미지 연결</h3>
+      <img :src="logoImSrc" alt="Vue 로고" style="width: 100px" />
+      <br />
+
+      <h3>3) 버튼 비활성화 제어</h3>
+      <p>현재 버튼 사용 불가능 상태: {{ isButtonDisabled }}</p>
+      <button :disabled="isButtonDisabled">동의해야 클릭할 수 있는 버튼</button>&nbsp;
+      <button @click="isButtonDisabled = !isButtonDisabled">위 버튼 잠금 해제/토글하기</button>
+    </div>
+
+    <div class="practice-section">
+      <h2>v-bind 디렉티브 고급 (클래스 바인딩)</h2>
+      <h3>클래스 바인딩 (객체 형식)</h3>
+      <p :class="{ 'text-danger': isWarning }">현재 경고 상태: {{ isWarning }}</p>
+      <button @click="isWarning = !isWarning">경고 상태 토글</button>
+      <br />
+
+      <h3>클래스 바인딩 (배열 형식)</h3>
+      <div :class="[themeClass, isWarning ? 'border-red' : 'border-gray']">다중 클래스가 조립된 박스 구역입니다.</div>
+    </div>
+
+    <div class="practice-section">
+      <h2>v-bind 디렉티브 고급 (스타일 바인딩)</h2>
+      <h3>1) 인라인 스타일 변수 조작 (객체 형식)</h3>
+      <p :style="{ color: textColor, fontWeight: 'bold' }">이 글자의 색상은 실시간으로 바뀝니다.</p>
+      <button @click="textColor = textColor === 'purple' ? 'blue' : 'purple'">글자 색상 토글</button>
+      <br />
+
+      <h3>2) 다중 스타일 객체 조립 (배열 형식)</h3>
+      <label>박스 가로 크기(px): </label>
+      <input type="number" v-model="boxWidth" step="50" />
+      <br />
+
+      <div :style="[baseBoxStyle, { width: boxWidth + 'px' }]">
+        <p style="color: white; padding: 10px; text-align: center">가로 크기: {{ boxWidth }}px 박스</p>
+      </div>
+    </div>
+
+    <div class="practice-section">
+      <h2>v-bind 디렉티브 고급 (단축 문법)</h2>
+      <div :id>
+        <img :src alt="Vue 로고" style="width: 50px" />
+      </div>
+    </div>
+
+    <div class="practice-section">
+      <h2>v-if, v-else-if, v-else 디렉티브 학습</h2>
+      <h3>1) 기본 로그인 상태 스위치</h3>
+      <p v-if="isLogged">환영합니다! 회원 전용 화면입니다.</p>
+      <p v-else>로그인이 필요합니다. 먼저 로그인해 주세요.</p>
+      <button @click="isLogged = !isLogged">
+        {{ isLogged ? '로그아웃하기' : '로그인하기' }}
+      </button>
+      <br />
+
+      <h3>2) 성적별 학점 등급 측정 (다중 조건문)</h3>
+      <label>현재 점수 입력: </label>
+      <input type="number" v-model="score" min="0" max="100" step="5" />
+      <br />
+
+      <div v-if="score >= 90" style="color: green; font-weight: bold">합격등급: A 학점 (훌륭합니다!)</div>
+      <div v-else-if="score >= 80" style="color: blue">합격등급: B 학점 (양호합니다.)</div>
+      <div v-else-if="score >= 70" style="color: orange">합격등급: C 학점 (조금 더 분발하세요.)</div>
+      <div v-else style="color: red; font-weight: bold">합격등급: F 학점 (재시험 대상입니다.)</div>
+    </div>
+
+    <div class="practice-section">
+      <h2>v-show 디렉티브 학습</h2>
+      <button @click="inVisible = !inVisible">화면 토글하기 </button>
+      <br />
+
+      <div v-show="inVisible" class="box">
+        <p>v-show 상자</p>
+        <p>조건이 false가 되면 CSS display: none이 붙습니다.</p>
+      </div>
+    </div>
+
+    <div class="practice-section">
+      <h2>v-on 이벤트 핸들링 기초</h2>
+      <h3>1) 인라인 연산 처리</h3>
+      <p>현재 카운트: {{ count }}</p>
+      <button @click="count++">1씩 증가</button>
+      <br />
+
+      <h3>2) 스크립트 함수 호출</h3>
+      <button @click="showAlert">알림창 띄우기</button>
+    </div>
+
+    <div class="practice-section">
+      <h2>v-on 이벤트 객체($event) 활용</h2>
+      <p>좌표: {{ position }}</p>
+      <p>태그: {{ tagName }}</p>
+      <button @click="getOnlyEvent">클릭 좌표 알아내기</button>
+      <button @click="getWithParam('회원A', $event)">회원 정보와 태그 확인</button>
+    </div>
+
+    <div class="practice-section">
+      <h2>이벤트 수식어(Modifiers) 학습</h2>
+      <h3>1) .prevent (기본 동작 막기)</h3>
+      <a href="https://www.naver.com" @click.prevent="handleLink">네이버 링크</a>
+      <br />
+      <h3>2) .stop (이벤트 버블링 막기)</h3>
+      <div @click="handleBox" style="padding: 20px; background-color: #eee">
+        <p>부모 영역 (클릭 시 alert 발동)</p>
+        <button @click="handleChild1">버블링 발생 버튼</button>
+        <button @click.stop="handleChild2">버블링 차단 버튼</button>
+      </div>
     </div>
   </header>
-
-  <RouterView />
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
+<style>
+@import '@/assets/practice.css';
+
+.text-danger {
+  color: red;
+  font-weight: bold;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+.bg-dark {
+  background-color: #333;
+  color: white;
+  padding: 15px;
 }
 
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
+.border-red {
+  border: 3px solid red;
 }
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
+.border-gray {
+  border: 3px solid #ccc;
 }
 
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
+.box {
+  padding: 10px;
+  margin-top: 5px;
+  color: white;
+  border-radius: 5px;
+  background-color: #3498db;
 }
 </style>
