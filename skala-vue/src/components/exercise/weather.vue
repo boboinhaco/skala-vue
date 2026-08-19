@@ -9,8 +9,20 @@ const weatherList = ref([
 ])
 
 const searchQuery = ref('')
-const selectedCityInfo = ref('카드를 클릭하거나 검색해보세요.')
+const filteredWeatherList = computed(() => {
+    if (!searchQuery.value) {return weatherList.value}
+    return weatherList.value.filter(item => item.name.includes(searchQuery.value)) 
+})
 
+watch(selectedCityInfo, (newValue, oldValue) => {
+    console.log(`[watch] 선택도시변경: ${oldValue} -> ${newValue}`)
+})
+
+watchEffect(() => {
+    console.log(`[watchEffect] 현재 검색어 : ${searchQuery.value}`)
+})
+
+// const selectedCityInfo = ref('카드를 클릭하거나 검색해보세요.')
 const showDetail = (cityName, status) => {
     window.alert(`${cityName}의 현재 날씨는 [${status}] 상태입니다.`)
 }
@@ -28,7 +40,7 @@ const showDetail = (cityName, status) => {
         <section class="list-box">
             <h3>도시별 날씨 정보</h3>
 
-            <div v-for="item in weatherlist" :key="item.id" class="weather-card"
+            <div v-for="item in filteredWeatherList" :key="item.id" class="weather-card"
                 @click="selectedCityInfo = `${item.name}이 선택되었습니다 `">
                 <h4>{{ item.name }} ({{ item.status }})</h4>
                 <p>현재 온도: {{ item.temp }}°C</p>
@@ -38,9 +50,13 @@ const showDetail = (cityName, status) => {
 
                 <button class="btn-detail" @click.stop="showDetail(item.name, item.status)">상세보기</button>
             </div>
-        </section>>
+        </section>
 
         <div class="status-bar">{{ selectedCityInfo }}</div>
     </div>
 
 </template>
+
+<style>
+@import '@/assets/exercise.css';
+</style>

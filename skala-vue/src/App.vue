@@ -1,5 +1,6 @@
 <script setup>
 import { ref, reactive, computed, watch } from 'vue'
+import Weather from '@/components/exercise/weather.vue'
 
 let normalCount = 0
 const vueCount = ref(0)
@@ -465,6 +466,8 @@ watch(() => user1.value.age, (newAge, oldAge) => {
     </div>
 
   </header>
+
+  <Weather />
 </template>
 
 <style>
