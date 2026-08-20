@@ -79,6 +79,7 @@ h1 {
 
 /* 과제페이지 스타일 - Component 분리 후 각 페이지별로 이동 */
 .dashboard-wrapper {
+  color: #2c3e50;  
   width: 600px;
   margin: 0 auto;
 }
@@ -90,7 +91,7 @@ h1 {
   margin-bottom: 15px;
   border: 1px solid #e9ecef;
 }
-input {
+.dashboard-wrapper input {
   padding: 8px;
   width: 90%;
   font-size: 14px;
