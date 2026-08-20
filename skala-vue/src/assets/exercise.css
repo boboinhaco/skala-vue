@@ -112,8 +112,11 @@ h1 {
   border-radius: 4px;
   color: #fff;
 }
-.hot {
+.sohot {
   background-color: #ff7675;
+}
+.hot {
+  background-color: #ebad55;
 }
 .cool {
   background-color: #74b9ff;

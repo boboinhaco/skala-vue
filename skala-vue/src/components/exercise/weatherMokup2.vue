@@ -10,8 +10,9 @@ const weatherList = ref([
 
 const searchQuery = ref('')
 const filteredWeatherList = computed(() => {
-    if (!searchQuery.value) { return weatherList.value }
-    return weatherList.value.filter(item => item.name.includes(searchQuery.value))
+    const q = searchQuery.value.trim()
+    if (!q) { return weatherList.value }
+    return weatherList.value.filter(item => item.name.includes(q))
 })
 
 watchEffect(() => {
@@ -20,7 +21,7 @@ watchEffect(() => {
 
 const selectedCityInfo = ref('카드를 클릭하거나 검색해보세요.')
 watch(selectedCityInfo, (newValue, oldValue) => {
-    console.log(`[watch] 감지] 상태 바 문구가 업데이트되었습니다 ${oldValue} -> ${newValue}`)
+    console.log(`[watch 감지] 상태 바 문구가 업데이트되었습니다 ${oldValue} -> ${newValue}`)
 })
 
 const showDetail = (cityName, status) => {
@@ -45,7 +46,8 @@ const showDetail = (cityName, status) => {
                 <h4>{{ item.name }} ({{ item.status }})</h4>
                 <p>현재 온도: {{ item.temp }}°C</p>
 
-                <span v-if="item.temp >= 25" class="badge hot"> 슈퍼핫🥵 너무 더움 (25도 이상)</span>
+                <span v-if="item.temp >= 30" class="badge sohot"> 슈퍼핫🥵 너무 더움 (30도 이상)</span>
+                <span v-else-if="item.temp >= 25 && item.temp < 30" class="badge hot"> 더움🫠 (25도 이상 30도 미만)</span>
                 <span v-else class="badge cool"> 선선함🙂‍↔️ (25도 미만)</span>
 
                 <button class="btn-detail" @click.stop="showDetail(item.name, item.status)">상세보기</button>

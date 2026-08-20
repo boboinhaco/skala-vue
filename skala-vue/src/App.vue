@@ -1,6 +1,6 @@
 <script setup>
 import { ref, reactive, computed, watch } from 'vue'
-import Weather from '@/components/exercise/weather.vue'
+import Weather from '@/components/exercise/weatherMokup2.vue'
 
 let normalCount = 0
 const vueCount = ref(0)
