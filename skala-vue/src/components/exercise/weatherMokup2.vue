@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed, watch, watchEffect } from 'vue'
 
 const weatherList = ref([
     { id: 'city_01', name: '서울', temp: 26, status: '맑음' },
@@ -10,19 +10,19 @@ const weatherList = ref([
 
 const searchQuery = ref('')
 const filteredWeatherList = computed(() => {
-    if (!searchQuery.value) {return weatherList.value}
-    return weatherList.value.filter(item => item.name.includes(searchQuery.value)) 
-})
-
-watch(selectedCityInfo, (newValue, oldValue) => {
-    console.log(`[watch] 선택도시변경: ${oldValue} -> ${newValue}`)
+    if (!searchQuery.value) { return weatherList.value }
+    return weatherList.value.filter(item => item.name.includes(searchQuery.value))
 })
 
 watchEffect(() => {
     console.log(`[watchEffect] 현재 검색어 : ${searchQuery.value}`)
 })
 
-// const selectedCityInfo = ref('카드를 클릭하거나 검색해보세요.')
+const selectedCityInfo = ref('카드를 클릭하거나 검색해보세요.')
+watch(selectedCityInfo, (newValue, oldValue) => {
+    console.log(`[watch] 감지] 상태 바 문구가 업데이트되었습니다 ${oldValue} -> ${newValue}`)
+})
+
 const showDetail = (cityName, status) => {
     window.alert(`${cityName}의 현재 날씨는 [${status}] 상태입니다.`)
 }
@@ -50,8 +50,10 @@ const showDetail = (cityName, status) => {
 
                 <button class="btn-detail" @click.stop="showDetail(item.name, item.status)">상세보기</button>
             </div>
+            <p v-if="filteredWeatherList.length === 0">
+                검색 결과와 일치하는 도시가 없습니다.
+            </p>
         </section>
-
         <div class="status-bar">{{ selectedCityInfo }}</div>
     </div>
 
@@ -59,4 +61,6 @@ const showDetail = (cityName, status) => {
 
 <style>
 @import '@/assets/exercise.css';
+
+
 </style>
