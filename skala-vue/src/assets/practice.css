@@ -127,3 +127,92 @@ input:focus {
 .btn-external:active {
   background-color: #2c8a5f;
 }
+/* Props & Emits 실습: 부모/자식 컴포넌트 영역 시각적 구분 */
+/* 부모 영역 - 짙은 남색 실선 + 회색 배경 (바깥쪽 컨테이너) */
+.parent-container {
+  padding: 16px 20px;
+  border: 2px solid #35495e;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+}
+/* 자식 영역 - Vue 그린 점선 + 흰 배경 (부모 안에 중첩된 것을 강조) */
+.child-container {
+  margin-top: 16px;
+  padding: 16px 20px;
+  border: 2px dashed #42b883;
+  border-radius: 8px;
+  background-color: #ffffff;
+}
+/* 각 영역의 제목 색을 테두리 색과 맞춰 소속을 한눈에 구분 */
+.parent-container > h3 {
+  color: #35495e;
+}
+.child-container > h3 {
+  color: #42b883;
+}
+/* 컨테이너 첫 제목의 상단 여백 제거 (h3 기본 margin-top: 20px 상쇄) */
+.parent-container > h3:first-child,
+.child-container > h3:first-child {
+  margin-top: 0;
+}
+
+/* Lifecycle Hook 실습: 컴포넌트 파괴 스위치 (카드 폭 전체를 차지하는 넓은 버튼) */
+.btn-destroy {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+/* Lifecycle Hook 실습: 타이머 모니터 박스 (민트 톤으로 파괴 대상 영역임을 구분) */
+.lifecycle-monitor {
+  padding: 16px;
+  text-align: center;
+  color: #5f7d7a;
+  background-color: #e8f8f6;
+  border: 1px solid #cceae5;
+  border-radius: 6px;
+}
+/* 모니터 안 문구와 버튼 사이 간격 */
+.lifecycle-monitor > p {
+  margin-bottom: 10px;
+}
+
+/* ─── Component Slot 실습 ─────────────────────────────── */
+/* 자식이 제공하는 기본 카드 틀. 부모가 주입한 마크업이 이 안에 담긴다 */
+.base-card {
+  padding: 14px 18px;
+  margin-bottom: 12px;
+  background-color: #ffffff;
+  border: 1px solid #dfe4ea;
+  border-radius: 6px;
+}
+/* 카드 안 마지막 요소의 하단 여백 제거 (박스 아래가 뜨는 것 방지) */
+.base-card > :last-child {
+  margin-bottom: 0;
+}
+/* 카드 첫 제목의 상단 여백 제거 (h3 기본 margin-top: 20px 상쇄) */
+.base-card > h3:first-child {
+  margin-top: 0;
+}
+/* Named Slot: header 슬롯과 main 슬롯의 경계를 구분선으로 표시 */
+.base-card > header {
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #eef1f4;
+}
+.base-card > header h3 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+/* Scoped Slot: 자식이 넘긴 데이터를 부모가 그리는 패널 (주입 영역임을 강조) */
+.display-panel {
+  padding: 10px 14px;
+  background-color: #fdf3ee;
+  border-left: 3px solid #e67e22;
+  border-radius: 4px;
+  font-size: 14px;
+}
+.display-panel > p {
+  margin-bottom: 0;
+}

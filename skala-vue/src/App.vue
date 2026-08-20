@@ -1,6 +1,11 @@
 <script setup>
 import { ref, reactive, computed, watch } from 'vue'
-import Weather from '@/components/exercise/weatherMokup2.vue'
+import WeatherParent from '@/components/exercise/WeatherParent.vue'
+import PropsEmitsParent from '@/components/practices/PropsEmitsParent.vue'
+import LifecycleDemo from '@/components/practices/LifecycleDemo.vue'
+import SlotDefaultParent from '@/components/practices/component/SlotDefaultParent.vue'
+import SlotNamedParent from '@/components/practices/component/SlotNamedParent.vue'
+import SlotScopedParent from '@/components/practices/component/SlotScopedParent.vue'
 
 let normalCount = 0
 const vueCount = ref(0)
@@ -131,6 +136,8 @@ watch(() => user1.value.age, (newAge, oldAge) => {
   logTarget.value = `[타겟 감지] 나이가 ${oldAge}세 ➡️ ${newAge}세로 변경됨!`
 },)
 
+// 라이프사이클 훅 실습은 LifecycleDemo.vue로 분리 (v-if로 파괴해야 onUnmounted가 실행됨)
+const isAlive = ref(true)
 </script>
 
 <template>
@@ -465,9 +472,24 @@ watch(() => user1.value.age, (newAge, oldAge) => {
       </div>
     </div>
 
+    <div class="practice-section">
+      <h2>Lifecycle Hook</h2>
+      <button class="btn-destroy" @click="isAlive = !isAlive">
+        🔴 실습 컴포넌트 {{ isAlive ? '파괴하기' : '되살리기' }} (v-if="false")
+      </button>
+      <hr />
+      <h3>⏱️ 라이프사이클 훅 흐름 탐색기</h3>
+      <LifecycleDemo v-if="isAlive" />
+    </div>
+
+    <PropsEmitsParent />
+
+    <SlotDefaultParent />
+    <SlotNamedParent />
+    <SlotScopedParent />
   </header>
 
-  <Weather />
+  <WeatherParent />
 </template>
 
 <style>
