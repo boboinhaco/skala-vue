@@ -1,64 +1,19 @@
 <script setup>
-import { onMounted, ref } from 'vue'
-import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router'
+import { computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useTemperature } from '@/composables/useTemperature'
+import { useWeatherStore } from '@/stores/weatherStore'
 
 const route = useRoute()
 const router = useRouter()
+const weatherStore = useWeatherStore()
 const { configStore, formatTemperature } = useTemperature()
 
-const weatherMockData = [
-  {
-    id: 'city_01',
-    name: '서울',
-    location: '대한민국 서울특별시',
-    temp: 26,
-    status: '맑음',
-    humidity: 55,
-    windSpeed: 2.5,
-  },
-  {
-    id: 'city_02',
-    name: '부산',
-    location: '대한민국 부산광역시',
-    temp: 30,
-    status: '폭염',
-    humidity: 62,
-    windSpeed: 3.8,
-  },
-  {
-    id: 'city_03',
-    name: '대구',
-    location: '대한민국 대구광역시',
-    temp: 22,
-    status: '비',
-    humidity: 78,
-    windSpeed: 2.9,
-  },
-  {
-    id: 'city_04',
-    name: '광주',
-    location: '대한민국 광주광역시',
-    temp: 28,
-    status: '맑음',
-    humidity: 58,
-    windSpeed: 1.9,
-  },
-]
-
-const selectedWeather = ref(null)
-
-const selectWeather = (cityId) => {
-  selectedWeather.value = weatherMockData.find((item) => item.id === cityId) ?? null
-}
-
-onMounted(() => {
-  selectWeather(route.params.cityId)
+const selectedWeather = computed(() => {
+  return weatherStore.getWeatherById(route.params.cityId)
 })
 
-onBeforeRouteUpdate((to) => {
-  selectWeather(to.params.cityId)
-})
+weatherStore.fetchWeather()
 
 const moveToHome = () => {
   router.push({ name: 'weather-home' })
@@ -67,7 +22,15 @@ const moveToHome = () => {
 
 <template>
   <main class="detail-page">
-    <template v-if="selectedWeather">
+    <section
+      v-if="weatherStore.isLoading && selectedWeather && selectedWeather.temp == null"
+      class="weather-detail-card detail-message"
+    >
+      <h2>실시간 날씨를 불러오는 중입니다.</h2>
+      <p>잠시만 기다려 주세요.</p>
+    </section>
+
+    <template v-else-if="selectedWeather && typeof selectedWeather.temp === 'number'">
       <h2>📊 지역별 상세 기상 관측 정보</h2>
 
       <section class="weather-detail-card">
@@ -81,6 +44,19 @@ const moveToHome = () => {
         <p>현재 풍속: {{ selectedWeather.windSpeed }}m/s</p>
       </section>
     </template>
+
+    <section v-else-if="weatherStore.errorMessage" class="weather-detail-card missing-city">
+      <h2>날씨 정보를 불러오지 못했습니다.</h2>
+      <p>{{ weatherStore.errorMessage }}</p>
+      <button
+        type="button"
+        class="retry-button"
+        :disabled="weatherStore.isLoading"
+        @click="weatherStore.fetchWeather(true)"
+      >
+        다시 시도
+      </button>
+    </section>
 
     <section v-else class="weather-detail-card missing-city">
       <h2>도시 정보를 찾을 수 없습니다.</h2>
@@ -129,6 +105,32 @@ h2 {
 
 .missing-city {
   text-align: center;
+}
+
+.detail-message {
+  text-align: center;
+}
+
+.detail-message h2,
+.missing-city h2 {
+  margin-bottom: 8px;
+  font-size: 1.25rem;
+}
+
+.retry-button {
+  margin-top: 14px;
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 8px;
+  background: #249dd8;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.retry-button:disabled {
+  cursor: wait;
+  opacity: 0.6;
 }
 
 .back-button {
