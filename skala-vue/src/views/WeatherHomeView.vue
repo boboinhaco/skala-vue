@@ -1,30 +1,30 @@
 <script setup>
-import { computed, ref, watch, watchEffect } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import BaseDashboardCard from '@/components/exercise/BaseDashboardCard.vue'
 import SearchBar from '@/components/exercise/SearchBar.vue'
 import WeatherCard from '@/components/exercise/WeatherCard.vue'
 import UnitToggle from '@/components/exercise/UnitToggle.vue'
+import { useWeatherStore } from '@/stores/weatherStore'
 
 const router = useRouter()
-
-const weatherList = ref([
-  { id: 'city_01', name: '서울', temp: 26, status: '맑음' },
-  { id: 'city_02', name: '부산', temp: 30, status: '폭염' },
-  { id: 'city_03', name: '대구', temp: 22, status: '비' },
-  { id: 'city_04', name: '광주', temp: 28, status: '맑음' },
-])
+const weatherStore = useWeatherStore()
 
 const searchQuery = ref('')
 const filteredWeatherList = computed(() => {
   const query = searchQuery.value.trim()
-  if (!query) return weatherList.value
+  if (!query) return weatherStore.weatherList
 
-  return weatherList.value.filter((item) => item.name.includes(query))
+  return weatherStore.weatherList.filter((item) => item.name.includes(query))
 })
 
-watchEffect(() => {
-  console.log(`[watchEffect] 현재 검색어: ${searchQuery.value}`)
+const lastUpdatedLabel = computed(() => {
+  if (!weatherStore.lastUpdated) return '업데이트 대기 중'
+  return `마지막 업데이트: ${weatherStore.lastUpdated.toLocaleTimeString('ko-KR')}`
+})
+
+onMounted(() => {
+  weatherStore.fetchWeather()
 })
 
 const selectedCityInfo = ref('카드를 클릭하거나 검색해보세요.')
@@ -55,7 +55,18 @@ const showDetail = (item) => {
       <h1>오늘의 도시별 날씨</h1>
       <p>도시를 검색하고 카드를 눌러 상세한 기상 정보를 확인하세요.</p>
 
-      <UnitToggle />
+      <div class="dashboard-controls">
+        <UnitToggle />
+        <button
+          type="button"
+          class="refresh-button"
+          :disabled="weatherStore.isLoading"
+          @click="weatherStore.fetchWeather(true)"
+        >
+          {{ weatherStore.isLoading ? '업데이트 중...' : '날씨 새로고침' }}
+        </button>
+      </div>
+      <small class="updated-at">{{ lastUpdatedLabel }}</small>
     </header>
 
     <BaseDashboardCard>
@@ -66,6 +77,21 @@ const showDetail = (item) => {
     <BaseDashboardCard>
       <h2>🗺️ 지역별 날씨 현황</h2>
 
+      <p v-if="weatherStore.isLoading && !weatherStore.hasWeatherData" class="loading-message">
+        실시간 날씨 정보를 불러오는 중입니다.
+      </p>
+
+      <div v-if="weatherStore.errorMessage" class="error-banner">
+        <span>{{ weatherStore.errorMessage }}</span>
+        <button
+          type="button"
+          :disabled="weatherStore.isLoading"
+          @click="weatherStore.fetchWeather(true)"
+        >
+          다시 시도
+        </button>
+      </div>
+
       <WeatherCard
         v-for="item in filteredWeatherList"
         :key="item.id"
@@ -74,7 +100,7 @@ const showDetail = (item) => {
         @click-detail="showDetail"
       />
 
-      <p v-if="filteredWeatherList.length === 0" class="empty-message">
+      <p v-if="!weatherStore.isLoading && filteredWeatherList.length === 0" class="empty-message">
         검색 결과와 일치하는 도시가 없습니다.
       </p>
     </BaseDashboardCard>
@@ -117,6 +143,43 @@ const showDetail = (item) => {
   color: #6f8395;
 }
 
+.dashboard-controls {
+  display: flex;
+  margin-top: 18px;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.dashboard-controls :deep(.unit-toggle) {
+  margin-top: 0;
+}
+
+.refresh-button,
+.error-banner button {
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 8px;
+  background: #2c3e50;
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.refresh-button:disabled,
+.error-banner button:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.updated-at {
+  display: block;
+  margin-top: 8px;
+  color: #8ba0b2;
+  font-size: 0.76rem;
+}
+
 h2 {
   margin: 0 0 12px;
   padding-bottom: 8px;
@@ -142,9 +205,44 @@ h2 {
   text-align: center;
 }
 
+.loading-message {
+  padding: 22px 0;
+  color: #52758c;
+  text-align: center;
+}
+
+.error-banner {
+  display: flex;
+  margin-bottom: 14px;
+  padding: 10px 12px;
+  border: 1px solid #f1c5c5;
+  border-radius: 9px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #fff6f6;
+  color: #b33a3a;
+  font-size: 0.86rem;
+}
+
+.error-banner button {
+  flex: 0 0 auto;
+  padding: 7px 10px;
+  background: #c94a4a;
+}
+
 @media (max-width: 520px) {
   .page-heading p {
     font-size: 0.9rem;
+  }
+
+  .dashboard-controls {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .refresh-button {
+    width: 100%;
   }
 }
 </style>

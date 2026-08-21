@@ -18,20 +18,32 @@ const { configStore, formatTemperature } = useTemperature()
 <template>
   <div class="weather-card" @click="emit('select-card', item)">
     <h4>{{ item.name }} ({{ item.status }})</h4>
-    <p>현재 온도: {{ formatTemperature(item.temp) }}{{ configStore.unitSymbol }}</p>
+    <p v-if="typeof item.temp === 'number'">
+      현재 온도: {{ formatTemperature(item.temp) }}{{ configStore.unitSymbol }}
+    </p>
+    <p v-else>현재 온도: --</p>
 
-    <span v-if="item.temp >= 30" class="badge sohot">
-      슈퍼핫🥵 너무 더움 ({{ formatTemperature(30) }}{{ configStore.unitSymbol }} 이상)
-    </span>
-    <span v-else-if="item.temp >= 25 && item.temp < 30" class="badge hot">
-      더움🫠 ({{ formatTemperature(25) }}{{ configStore.unitSymbol }} 이상 {{ formatTemperature(30)
-      }}{{ configStore.unitSymbol }} 미만)</span
+    <template v-if="typeof item.temp === 'number'">
+      <span v-if="item.temp >= 30" class="badge sohot">
+        슈퍼핫🥵 너무 더움 ({{ formatTemperature(30) }}{{ configStore.unitSymbol }} 이상)
+      </span>
+      <span v-else-if="item.temp >= 25" class="badge hot">
+        더움🫠 ({{ formatTemperature(25) }}{{ configStore.unitSymbol }} 이상
+        {{ formatTemperature(30) }}{{ configStore.unitSymbol }} 미만)
+      </span>
+      <span v-else class="badge cool">
+        선선함🙂‍↔️ ({{ formatTemperature(25) }}{{ configStore.unitSymbol }} 미만)
+      </span>
+    </template>
+    <span v-else class="badge unavailable">실시간 데이터 없음</span>
+
+    <button
+      class="btn-detail"
+      :disabled="typeof item.temp !== 'number'"
+      @click.stop="emit('click-detail', item)"
     >
-    <span v-else class="badge cool">
-      선선함🙂‍↔️ ({{ formatTemperature(25) }}{{ configStore.unitSymbol }} 미만)
-    </span>
-
-    <button class="btn-detail" @click.stop="emit('click-detail', item)">상세보기</button>
+      상세보기
+    </button>
   </div>
 </template>
 
@@ -77,6 +89,9 @@ const { configStore, formatTemperature } = useTemperature()
 .cool {
   background-color: #74b9ff;
 }
+.unavailable {
+  background-color: #95a5a6;
+}
 .btn-detail {
   position: absolute;
   top: 50%;
@@ -93,6 +108,10 @@ const { configStore, formatTemperature } = useTemperature()
 .btn-detail:hover {
   background: #249dd8;
   color: #fff;
+}
+.btn-detail:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
 }
 
 @media (max-width: 520px) {
