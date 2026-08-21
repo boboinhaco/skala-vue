@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import BaseDashboardCard from '@/components/exercise/BaseDashboardCard.vue'
 import SearchBar from '@/components/exercise/SearchBar.vue'
 import WeatherCard from '@/components/exercise/WeatherCard.vue'
+import UnitToggle from '@/components/exercise/UnitToggle.vue'
 
 const router = useRouter()
 
@@ -53,6 +54,8 @@ const showDetail = (item) => {
       <span class="eyebrow">LIVE WEATHER</span>
       <h1>오늘의 도시별 날씨</h1>
       <p>도시를 검색하고 카드를 눌러 상세한 기상 정보를 확인하세요.</p>
+
+      <UnitToggle />
     </header>
 
     <BaseDashboardCard>

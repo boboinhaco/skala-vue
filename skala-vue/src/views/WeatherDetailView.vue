@@ -1,9 +1,11 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router'
+import { useTemperature } from '@/composables/useTemperature'
 
 const route = useRoute()
 const router = useRouter()
+const { configStore, formatTemperature } = useTemperature()
 
 const weatherMockData = [
   {
@@ -71,7 +73,9 @@ const moveToHome = () => {
       <section class="weather-detail-card">
         <h3>{{ selectedWeather.name }}</h3>
         <p>📍 지정 지역: {{ selectedWeather.location }}</p>
-        <p>실시간 기온: {{ selectedWeather.temp }}°C</p>
+        <p>
+          실시간 기온: {{ formatTemperature(selectedWeather.temp) }}{{ configStore.unitSymbol }}
+        </p>
         <p>기상 현황: {{ selectedWeather.status }}</p>
         <p>대기 습도: {{ selectedWeather.humidity }}%</p>
         <p>현재 풍속: {{ selectedWeather.windSpeed }}m/s</p>
