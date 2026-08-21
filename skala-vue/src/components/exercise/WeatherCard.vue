@@ -28,13 +28,29 @@ const emit = defineEmits(['select-card', 'click-detail'])
 
 <style scoped>
 .weather-card {
-  background: #fff;
-  border: 1px solid #dee2e6;
-  padding: 12px;
-  margin-bottom: 10px;
-  border-radius: 6px;
-  cursor: pointer;
   position: relative;
+  margin-bottom: 12px;
+  padding: 16px 128px 16px 16px;
+  background: #fff;
+  border: 1px solid #dfe8ef;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+.weather-card:hover {
+  border-color: #9ed3eb;
+  box-shadow: 0 6px 18px rgb(44 62 80 / 8%);
+  transform: translateY(-1px);
+}
+.weather-card h4 {
+  margin: 0 0 4px;
+  color: #2c3e50;
+  font-size: 1rem;
+  font-weight: 800;
+}
+.weather-card p {
+  margin: 0 0 10px;
+  color: #6f8395;
 }
 .badge {
   display: inline-block;
@@ -54,9 +70,32 @@ const emit = defineEmits(['select-card', 'click-detail'])
 }
 .btn-detail {
   position: absolute;
-  right: 12px;
-  top: 15px;
-  padding: 6px 10px;
+  top: 50%;
+  right: 16px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 7px;
+  background: #eaf6fc;
+  color: #1678a8;
   cursor: pointer;
+  font-weight: 700;
+  transform: translateY(-50%);
+}
+.btn-detail:hover {
+  background: #249dd8;
+  color: #fff;
+}
+
+@media (max-width: 520px) {
+  .weather-card {
+    padding-right: 16px;
+  }
+
+  .btn-detail {
+    position: static;
+    width: 100%;
+    margin-top: 12px;
+    transform: none;
+  }
 }
 </style>
