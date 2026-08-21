@@ -23,11 +23,27 @@ const handleInput = (e) => {
 
 <style scoped>
 .search-bar input {
-  padding: 8px;
-  width: 90%;
-  font-size: 14px;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #cedbe5;
+  border-radius: 9px;
+  outline: none;
+  background: #f8fbfd;
+  color: #2c3e50;
+  transition: 0.2s ease;
+}
+.search-bar input:focus {
+  border-color: #249dd8;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgb(36 157 216 / 12%);
 }
 .search-bar p {
   margin-top: 8px;
+  color: #7890a5;
+  font-size: 0.86rem;
+}
+.search-bar strong {
+  color: #249dd8;
+  font-weight: 700;
 }
 </style>

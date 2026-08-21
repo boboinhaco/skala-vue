@@ -7,10 +7,17 @@
 
 <style scoped>
 .base-dashboard-card {
-  background: #f8f9fa;
-  padding: 15px;
-  border-radius: 8px;
-  margin-bottom: 15px;
-  border: 1px solid #e9ecef;
+  margin-bottom: 18px;
+  padding: 22px;
+  border: 1px solid #e1e9ef;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgb(44 62 80 / 6%);
+}
+
+@media (max-width: 520px) {
+  .base-dashboard-card {
+    padding: 17px;
+  }
 }
 </style>
