@@ -1,6 +1,6 @@
 <script setup>
 import { ref, reactive, computed, watch, onMounted, onUpdated, onUnmounted } from 'vue'
-
+import { useCounterStore } from '@/stores/counter'
 
 let normalCount = 0
 const vueCount = ref(0)
@@ -150,6 +150,8 @@ onUnmounted(() => {
   clearInterval(timerId)
   console.log('4. [onUnmounted] 컴포넌트가 소멸했습니다. 타이머 청소 완료!')
 })
+
+const counterStore = useCounterStore()
 </script>
 
 <template>
@@ -483,6 +485,20 @@ onUnmounted(() => {
         <p>{{ logTarget }}</p>
       </div>
     </div>
+
+    <section class="practice-section">
+      <h2>Counter Store 활용 실습</h2>
+      <p>
+        원본 카운트(state):
+        <strong>{{ counterStore.count }}</strong>
+      </p>
+      <p>
+        2배 연산 데이터(getter):
+        <strong>{{ counterStore.doubleCount }}</strong>
+      </p>
+
+      <button type="button" @click="counterStore.increment">숫자 1 증가</button>
+    </section>
 
   </main>
 </template>

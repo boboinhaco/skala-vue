@@ -7,7 +7,7 @@
   line-height: 1.6;
 }
 /* 개별 실습 예제 섹션 박스 */
-div.practice-section {
+.practice-section {
   color: #2c3e50; /* 다크 모드에서 body 텍스트 색을 상속받아 흐려지는 것 방지 */
   padding: 10px 20px 20px 20px;
   margin-top: 10px;
