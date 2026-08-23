@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { RouterView, useRoute } from 'vue-router'
 import Toast from 'primevue/toast'
 import SiteHeader from '@/components/layout/SiteHeader.vue'
@@ -10,8 +10,15 @@ import { useWeatherStore } from '@/stores/weatherStore'
 const weatherStore = useWeatherStore()
 const route = useRoute()
 
-// 날씨와 무관한 실습 화면에서는 관측 막대를 숨긴다
-const showWeatherBar = computed(() => route.name !== 'practice')
+// 날씨 자체가 주제가 아닌 화면에서는 관측 막대를 숨긴다
+const BARE_ROUTES = ['practice', 'weather-about']
+const showWeatherBar = computed(() => !BARE_ROUTES.includes(route.name))
+
+// 배경은 모든 화면에 깔리므로 날씨는 여기서 확보한다.
+// (관측 막대가 숨겨진 화면에서도 배경이 실제 날씨를 따라가야 한다)
+onMounted(() => {
+  weatherStore.fetchWeather()
+})
 </script>
 
 <template>

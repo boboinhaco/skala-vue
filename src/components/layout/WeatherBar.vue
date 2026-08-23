@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted } from 'vue'
+import { computed } from 'vue'
 import Button from 'primevue/button'
 import UnitToggle from '@/components/exercise/UnitToggle.vue'
 import WeatherNowChip from './WeatherNowChip.vue'
@@ -8,12 +8,6 @@ import { sceneFor } from '@/data/weatherScenes'
 
 // 원래 본문 히어로였던 부분. 헤더 안으로 들어오면서 관측 막대가 됐다.
 const weatherStore = useWeatherStore()
-
-// 관측 막대는 모든 화면의 헤더에 있으므로 여기서 직접 확보한다.
-// (소개 화면처럼 자체적으로 날씨를 부르지 않는 화면에서도 값이 채워지도록)
-onMounted(() => {
-  weatherStore.fetchWeather()
-})
 
 const scene = computed(() => sceneFor(weatherStore.sceneCode, weatherStore.sceneIsNight))
 
