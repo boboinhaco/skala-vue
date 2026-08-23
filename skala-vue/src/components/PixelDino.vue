@@ -2,6 +2,7 @@
 <script setup>
 import { computed } from 'vue'
 import { GRID_W, GRID_H, createPalette, getDinoGrid, gridToPixels } from '../data/dinoSprites'
+import { sceneGroupFromWmo } from '../data/weatherScenes'
 
 const props = defineProps({
   dino: {
@@ -32,6 +33,20 @@ const palette = computed(() => createPalette(props.dino?.accent ?? '#6D9B54'))
 const grid = computed(() => getDinoGrid(props.dino, props.weather))
 const pixels = computed(() => gridToPixels(grid.value, palette.value))
 
+// 날씨에 따라 몸짓이 달라진다. 추우면 덜덜 떨고, 더우면 늘어지고,
+// 비 오면 웅크리고, 밤에는 꾸벅꾸벅 존다.
+const reaction = computed(() => {
+  const { temp, isNight, weatherCode } = props.weather ?? {}
+  const group = sceneGroupFromWmo(weatherCode)
+
+  if (typeof temp === 'number' && temp <= 4) return 'shiver'
+  if (typeof temp === 'number' && temp >= 32) return 'pant'
+  if (isNight) return 'doze'
+  if (['rain', 'drizzle', 'shower', 'thunder'].includes(group)) return 'huddle'
+  if (group === 'snow') return 'shiver'
+  return 'idle'
+})
+
 const label = computed(() =>
   props.dino?.name ? `${props.dino.name} 날씨 마스코트` : '공룡 날씨 마스코트',
 )
@@ -40,7 +55,7 @@ const label = computed(() =>
 <template>
   <div
     class="pixel-dino"
-    :class="{ 'pixel-dino--animate': animate }"
+    :class="[animate && `pixel-dino--${reaction}`]"
     :style="{ width: `${size}px`, height: `${size * (GRID_H / GRID_W)}px` }"
   >
     <svg
@@ -94,7 +109,11 @@ const label = computed(() =>
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .pixel-dino--animate {
+  .pixel-dino--idle,
+  .pixel-dino--shiver,
+  .pixel-dino--pant,
+  .pixel-dino--huddle,
+  .pixel-dino--doze {
     animation: none;
   }
 }

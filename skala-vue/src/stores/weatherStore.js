@@ -1,10 +1,13 @@
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { toWmoCode } from '@/data/openWeatherToWmo'
 
 const API_URL = 'https://api.openweathermap.org/data/2.5/weather'
 const AIR_URL = 'https://api.openweathermap.org/data/2.5/air_pollution'
+const FORECAST_URL = 'https://api.openweathermap.org/data/2.5/forecast'
+// 예보는 지금 보고 있는 지역 한 곳만 받는다 (17곳 전부 받으면 요청이 너무 늘어난다)
+const FORECAST_SLOTS = 8
 const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY
 const CACHE_DURATION = 5 * 60 * 1000
 
@@ -30,6 +33,18 @@ const CITIES = [
 
 export { CITIES }
 
+// 대기질 응답에서 지수와 미세먼지 농도를 뽑는다
+const readAir = (result) => {
+  if (result?.status !== 'fulfilled') return { aqi: null, pm25: null, pm10: null }
+
+  const entry = result.value.data.list?.[0]
+  return {
+    aqi: entry?.main?.aqi ?? null,
+    pm25: entry?.components?.pm2_5 ?? null,
+    pm10: entry?.components?.pm10 ?? null,
+  }
+}
+
 const createEmptyWeather = (city) => ({
   ...city,
   temp: null,
@@ -40,6 +55,9 @@ const createEmptyWeather = (city) => ({
   conditionId: null,
   isNight: false,
   aqi: null,
+  pm25: null,
+  pm10: null,
+  clouds: null,
 })
 
 export const useWeatherStore = defineStore('weather', () => {
@@ -69,6 +87,63 @@ export const useWeatherStore = defineStore('weather', () => {
   const selectCity = (cityId) => {
     selectedCityId.value = cityId
   }
+
+  // ── 시간별 예보 (보고 있는 지역만) ─────────────────────────
+  const forecasts = ref({})
+  const isForecastLoading = ref(false)
+
+  const fetchForecast = async (cityId) => {
+    const city = CITIES.find((item) => item.id === cityId)
+    if (!city || !API_KEY) return
+
+    const cached = forecasts.value[cityId]
+    if (cached && Date.now() - cached.fetchedAt < CACHE_DURATION) return
+
+    isForecastLoading.value = true
+
+    try {
+      const { data } = await axios.get(FORECAST_URL, {
+        params: {
+          lat: city.lat,
+          lon: city.lon,
+          appid: API_KEY,
+          units: 'metric',
+          lang: 'kr',
+          cnt: FORECAST_SLOTS,
+        },
+      })
+
+      forecasts.value = {
+        ...forecasts.value,
+        [cityId]: {
+          fetchedAt: Date.now(),
+          list: (data.list ?? []).map((slot) => ({
+            at: new Date(slot.dt * 1000),
+            temp: slot.main.temp,
+            // pop 은 0~1 이라 백분율로 바꿔 둔다
+            pop: Math.round((slot.pop ?? 0) * 100),
+            conditionId: slot.weather?.[0]?.id ?? null,
+            isNight: slot.weather?.[0]?.icon?.endsWith('n') ?? false,
+          })),
+        },
+      }
+    } catch (error) {
+      console.error('OpenWeather 예보 요청 실패:', error)
+    } finally {
+      isForecastLoading.value = false
+    }
+  }
+
+  const selectedForecast = computed(() => forecasts.value[selectedWeather.value?.id]?.list ?? [])
+
+  // 보고 있는 지역이 바뀌면 그 지역 예보를 받아둔다
+  watch(
+    () => selectedWeather.value?.id,
+    (cityId) => {
+      if (cityId) fetchForecast(cityId)
+    },
+    { immediate: true },
+  )
 
   const getWeatherById = computed(() => {
     return (cityId) => weatherList.value.find((item) => item.id === cityId) ?? null
@@ -143,10 +218,9 @@ export const useWeatherStore = defineStore('weather', () => {
           conditionId: condition?.id ?? null,
           // 아이콘 코드가 'n'으로 끝나면 밤 (예: '10n')
           isNight: condition?.icon?.endsWith('n') ?? false,
-          aqi:
-            airResult?.status === 'fulfilled'
-              ? (airResult.value.data.list?.[0]?.main?.aqi ?? null)
-              : null,
+          // 자외선 추정에 쓰는 구름량(%)
+          clouds: data.clouds?.all ?? null,
+          ...readAir(airResult),
         }
       })
 
@@ -181,5 +255,8 @@ export const useWeatherStore = defineStore('weather', () => {
     sceneCode,
     sceneIsNight,
     selectCity,
+    selectedForecast,
+    isForecastLoading,
+    fetchForecast,
   }
 })

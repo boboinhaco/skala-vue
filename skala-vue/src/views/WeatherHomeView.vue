@@ -1,24 +1,22 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import Button from 'primevue/button'
-import Message from 'primevue/message'
-import ProgressSpinner from 'primevue/progressspinner'
 import BaseDashboardCard from '@/components/exercise/BaseDashboardCard.vue'
 import SearchBar from '@/components/exercise/SearchBar.vue'
-import WeatherCard from '@/components/exercise/WeatherCard.vue'
+import ObservatoryList from '@/components/exercise/ObservatoryList.vue'
+import SelectedSummary from '@/components/exercise/SelectedSummary.vue'
 import DinoMascotCard from '@/components/exercise/DinoMascotCard.vue'
 import PixelKoreaMap from '@/components/scene/PixelKoreaMap.vue'
+import MeteorAlertCard from '@/components/scene/MeteorAlertCard.vue'
+import FootprintTimeline from '@/components/scene/FootprintTimeline.vue'
 import { useWeatherStore } from '@/stores/weatherStore'
 import { useFavoriteStore } from '@/stores/favoriteStore'
-import { useTemperature } from '@/composables/useTemperature'
 import { useCitySelection } from '@/composables/useCitySelection'
 import { sceneFor } from '@/data/weatherScenes'
 
 const router = useRouter()
 const weatherStore = useWeatherStore()
 const favoriteStore = useFavoriteStore()
-const { configStore, formatTemperature } = useTemperature()
 const { selectCity, selectCityById, openDetail } = useCitySelection()
 
 const searchQuery = ref('')
@@ -81,20 +79,7 @@ const handleUpdateQuery = (newQuery) => {
             @select="selectCityById"
           />
 
-          <div v-if="selected" class="side-now">
-            <p class="px-eyebrow">지금 보는 곳</p>
-            <h3>{{ selected.name }}</h3>
-            <p class="side-now__scene">{{ currentScene.label }} · {{ selected.status }}</p>
-            <ul class="side-now__stats">
-              <li>
-                기온
-                <strong>{{ formatTemperature(selected.temp) }}{{ configStore.unitSymbol }}</strong>
-              </li>
-              <li>
-                습도 <strong>{{ selected.humidity }}%</strong>
-              </li>
-            </ul>
-          </div>
+          <SelectedSummary :weather="selected" :scene-label="currentScene.label" />
         </BaseDashboardCard>
       </aside>
 
@@ -113,54 +98,42 @@ const handleUpdateQuery = (newQuery) => {
           "
           class="city-card"
         >
-          <div v-if="weatherStore.isLoading && !weatherStore.hasWeatherData" class="loading">
-            <ProgressSpinner style="width: 44px; height: 44px" :stroke-width="8" />
-            <p class="px-dim">실시간 날씨를 불러오는 중입니다.</p>
-          </div>
-
-          <Message
-            v-if="weatherStore.errorMessage"
-            severity="error"
-            :closable="false"
-            class="error-message"
-          >
-            <div class="error-message__row">
-              <span>{{ weatherStore.errorMessage }}</span>
-              <Button
-                label="다시 시도"
-                size="small"
-                :disabled="weatherStore.isLoading"
-                @click="weatherStore.fetchWeather(true)"
-              />
-            </div>
-          </Message>
-
-          <div class="city-grid">
-            <WeatherCard
-              v-for="item in visibleWeatherList"
-              :key="item.id"
-              :item="item"
-              :selected="selected?.id === item.id"
-              @select-card="selectCity"
-              @click-detail="openDetail"
-            />
-          </div>
-
-          <div v-if="hiddenCount > 0" class="more-row">
-            <Button
-              :label="`더보기 (${hiddenCount}곳)`"
-              icon="pi pi-arrow-right"
-              icon-pos="right"
-              severity="secondary"
-              @click="router.push({ name: 'regions' })"
-            />
-          </div>
-
-          <p v-if="!weatherStore.isLoading && filteredWeatherList.length === 0" class="empty">
-            검색 결과와 일치하는 지역이 없습니다.
-          </p>
+          <ObservatoryList
+            :cities="visibleWeatherList"
+            :selected-id="selected?.id"
+            :loading="weatherStore.isLoading"
+            :has-data="weatherStore.hasWeatherData"
+            :error-message="weatherStore.errorMessage"
+            :hidden-count="hiddenCount"
+            @select="selectCity"
+            @detail="openDetail"
+            @retry="weatherStore.fetchWeather(true)"
+            @more="router.push({ name: 'regions' })"
+          />
         </BaseDashboardCard>
       </div>
+    </div>
+
+    <!-- 경보 + 시간별 예보 -->
+    <div class="dashboard__cols dashboard__cols--extra">
+      <BaseDashboardCard
+        title="운석 경보"
+        subtitle="자외선 · 미세먼지 · 강수확률"
+        class="extra-card"
+      >
+        <MeteorAlertCard :weather="selected" :forecast="weatherStore.selectedForecast" />
+      </BaseDashboardCard>
+
+      <BaseDashboardCard
+        title="발자국 타임라인"
+        :subtitle="selected ? `${selected.name} · 앞으로 24시간` : '앞으로 24시간'"
+        class="extra-card"
+      >
+        <FootprintTimeline
+          :slots="weatherStore.selectedForecast"
+          :loading="weatherStore.isForecastLoading"
+        />
+      </BaseDashboardCard>
     </div>
 
     <!-- 좌우를 가로지르는 공룡 무대. 배경이 그대로 비쳐 보인다 -->
@@ -208,84 +181,19 @@ const handleUpdateQuery = (newQuery) => {
   margin-bottom: 0;
 }
 
-.side-now {
-  margin-top: 14px;
-  padding-top: 12px;
-  border-top: 2px solid var(--px-edge-light);
+/* 둘째 줄은 내용 높이에 맞춰 각자 크기를 잡는다 */
+.dashboard__cols--extra {
+  margin-top: 18px;
+  align-items: start;
 }
 
-.side-now h3 {
-  margin: 2px 0 4px;
-}
-
-.side-now__scene {
-  margin: 0;
-  color: var(--px-ink-dim);
-  font-size: 11px;
-}
-
-.side-now__stats {
-  display: flex;
-  margin: 10px 0 0;
-  padding: 0;
-  gap: 14px;
-  color: var(--px-ink-dim);
-  font-size: 11px;
-  list-style: none;
-}
-
-.side-now__stats strong {
-  color: var(--px-accent);
-  font-family: var(--px-font-display);
-  font-weight: 700;
-}
-
-.city-grid {
-  display: grid;
-  gap: 10px;
-  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
-}
-
-.more-row {
-  display: flex;
-  margin-top: 12px;
-  justify-content: center;
+.extra-card {
+  margin-bottom: 0;
 }
 
 /* 공룡은 카드 밖으로 나와 배경 위에 선다 */
 .dino-stage {
   margin-top: 6px;
-}
-
-.loading {
-  display: flex;
-  padding: 18px 0;
-  align-items: center;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.loading p {
-  margin: 0;
-}
-
-.error-message {
-  margin-bottom: 12px;
-}
-
-.error-message__row {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.empty {
-  padding: 18px 0;
-  color: var(--px-ink-dim);
-  font-size: 11px;
-  text-align: center;
 }
 
 @media (max-width: 960px) {

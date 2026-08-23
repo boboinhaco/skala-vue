@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import Button from 'primevue/button'
 import Tag from 'primevue/tag'
 import PixelWeatherChip from '@/components/scene/PixelWeatherChip.vue'
+import FavoriteStar from '@/components/common/FavoriteStar.vue'
 import { useTemperature } from '@/composables/useTemperature'
 import { useFavoriteStore } from '@/stores/favoriteStore'
 import { toWmoCode, msToKmh } from '@/data/openWeatherToWmo'
@@ -61,16 +62,12 @@ const band = computed(() => {
         <h4>{{ item.name }}</h4>
         <Tag :value="band.label" :severity="band.severity" />
 
-        <button
-          type="button"
+        <FavoriteStar
           class="weather-card__fav"
-          :class="{ 'weather-card__fav--on': isFavorite }"
-          :aria-pressed="isFavorite"
-          :aria-label="`${item.name} 즐겨찾기 ${isFavorite ? '해제' : '추가'}`"
-          @click.stop="favoriteStore.toggle(item.id)"
-        >
-          <i :class="isFavorite ? 'pi pi-star-fill' : 'pi pi-star'" aria-hidden="true"></i>
-        </button>
+          :active="isFavorite"
+          :label="item.name"
+          @toggle="favoriteStore.toggle(item.id)"
+        />
       </div>
 
       <p class="weather-card__status">
@@ -156,32 +153,9 @@ const band = computed(() => {
   gap: 8px;
 }
 
-/* 즐겨찾기 별 — 빈 별에서 노란 별로 */
+/* 별 자체 모양은 FavoriteStar 가 갖고 있고, 여기서는 자리만 잡는다 */
 .weather-card__fav {
-  display: inline-flex;
   margin-left: auto;
-  padding: 3px;
-  border: 0;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  color: var(--px-ink-dim);
-  cursor: pointer;
-  font-size: 15px;
-  line-height: 1;
-}
-
-.weather-card__fav:hover {
-  color: var(--px-accent);
-}
-
-.weather-card__fav--on {
-  color: var(--px-accent);
-}
-
-.weather-card__fav:focus-visible {
-  outline: 3px solid var(--px-accent);
-  outline-offset: 2px;
 }
 
 .weather-card__head h4 {

@@ -1,6 +1,9 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { MAP_W, MAP_H, landRects, coastRects, toCell } from '@/data/koreaMap'
+import { tempColor } from '@/data/tempScale'
+import MapMarker from './MapMarker.vue'
+import TempLegend from './TempLegend.vue'
 
 const props = defineProps({
   cities: { type: Array, default: () => [] },
@@ -11,18 +14,6 @@ const emit = defineEmits(['select'])
 
 const land = landRects()
 const coast = coastRects()
-
-// 기온을 색으로. 지도만 보고도 어디가 덥고 추운지 한눈에 들어오게 한다.
-const TEMP_STEPS = [
-  { max: 0, color: '#6aa9e0' },
-  { max: 10, color: '#74c4ee' },
-  { max: 20, color: '#6fd08c' },
-  { max: 25, color: '#f0d64a' },
-  { max: 30, color: '#f0913c' },
-  { max: Infinity, color: '#ef6b6b' },
-]
-const tempColor = (temp) =>
-  typeof temp === 'number' ? TEMP_STEPS.find((s) => temp < s.max).color : '#55617d'
 
 const markers = computed(() =>
   props.cities.map((city) => {
@@ -45,15 +36,6 @@ const VIEW = '1 -1 44 64'
 const hovered = ref(null)
 // 이름표는 고른 곳과 마우스 올린 곳만 (17개를 다 띄우면 수도권이 겹친다)
 const labelled = computed(() => markers.value.filter((m) => m.selected || m.id === hovered.value))
-
-const LEGEND = [
-  { label: '0°C 미만', color: '#6aa9e0' },
-  { label: '10°', color: '#74c4ee' },
-  { label: '20°', color: '#6fd08c' },
-  { label: '25°', color: '#f0d64a' },
-  { label: '30°', color: '#f0913c' },
-  { label: '이상', color: '#ef6b6b' },
-]
 </script>
 
 <template>
@@ -90,34 +72,13 @@ const LEGEND = [
           />
 
           <!-- 관측소 -->
-          <g
+          <MapMarker
             v-for="m in markers"
             :key="m.id"
-            class="marker"
-            :class="{ 'marker--on': m.selected }"
-            role="button"
-            tabindex="0"
-            :aria-label="`${m.name} ${typeof m.temp === 'number' ? Math.round(m.temp) + '도' : '데이터 없음'}`"
-            :aria-pressed="m.selected"
-            @click="emit('select', m.id)"
-            @keydown.enter.prevent="emit('select', m.id)"
-            @keydown.space.prevent="emit('select', m.id)"
-            @mouseenter="hovered = m.id"
-            @mouseleave="hovered = null"
-            @focus="hovered = m.id"
-            @blur="hovered = null"
-          >
-            <rect
-              v-if="m.selected"
-              :x="m.x - 2"
-              :y="m.y - 2"
-              width="6"
-              height="6"
-              class="marker__ring"
-            />
-            <rect :x="m.x - 1" :y="m.y - 1" width="4" height="4" class="marker__edge" />
-            <rect :x="m.x" :y="m.y" width="2" height="2" :fill="m.color" />
-          </g>
+            :marker="m"
+            @select="emit('select', $event)"
+            @hover="hovered = $event"
+          />
         </svg>
 
         <!-- 이름표는 픽셀 폰트를 쓰려고 HTML로 얹는다 -->
@@ -136,11 +97,7 @@ const LEGEND = [
       </div>
     </div>
 
-    <ul class="korea-map__legend">
-      <li v-for="l in LEGEND" :key="l.label">
-        <i :style="{ background: l.color }"></i>{{ l.label }}
-      </li>
-    </ul>
+    <TempLegend />
   </div>
 </template>
 
@@ -190,34 +147,6 @@ const LEGEND = [
   fill: #3f6b52;
 }
 
-.marker {
-  cursor: pointer;
-  outline: 0;
-}
-
-.marker__edge {
-  fill: var(--px-edge);
-}
-
-.marker__ring {
-  fill: var(--px-accent);
-}
-
-.marker:hover .marker__edge,
-.marker:focus-visible .marker__edge {
-  fill: var(--px-accent);
-}
-
-.marker--on .marker__ring {
-  animation: ring 1.2s steps(2, end) infinite;
-}
-
-@keyframes ring {
-  50% {
-    opacity: 0.35;
-  }
-}
-
 .korea-map__tag {
   position: absolute;
   padding: 1px 5px;
@@ -235,29 +164,6 @@ const LEGEND = [
 
 .korea-map__tag b {
   color: var(--px-accent);
-}
-
-.korea-map__legend {
-  display: flex;
-  margin: 10px 0 0;
-  padding: 0;
-  flex-wrap: wrap;
-  gap: 4px 8px;
-  list-style: none;
-}
-
-.korea-map__legend li {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: var(--px-ink-dim);
-  font-size: 11px;
-}
-
-.korea-map__legend i {
-  width: 9px;
-  height: 9px;
-  border: 2px solid var(--px-edge);
 }
 
 /* 한 단으로 접히면 지도가 화면을 다 먹지 않도록 폭을 제한한다 */
