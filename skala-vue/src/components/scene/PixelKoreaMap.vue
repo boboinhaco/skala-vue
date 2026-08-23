@@ -31,7 +31,7 @@ const markers = computed(() =>
 )
 
 // 육지가 실제로 차지하는 범위만 보여준다 (오른쪽·아래 빈 바다를 잘라낸다)
-const VIEW = '1 -1 44 64'
+const VIEW = '2 -2 88 128'
 
 const hovered = ref(null)
 // 이름표는 고른 곳과 마우스 올린 곳만 (17개를 다 띄우면 수도권이 겹친다)
@@ -87,8 +87,8 @@ const labelled = computed(() => markers.value.filter((m) => m.selected || m.id =
           :key="`t${m.id}`"
           class="korea-map__tag"
           :style="{
-            left: `${((m.x + 1 - 1) / 44) * 100}%`,
-            top: `${((m.y + 3 + 1) / 63) * 100}%`,
+            left: `${((m.x - 1) / 88) * 100}%`,
+            top: `${((m.y + 5) / 128) * 100}%`,
           }"
         >
           {{ m.name }}
@@ -125,7 +125,7 @@ const labelled = computed(() => markers.value.filter((m) => m.selected || m.id =
   max-width: 100%;
   max-height: 100%;
   margin: auto;
-  aspect-ratio: 44 / 64;
+  aspect-ratio: 88 / 128;
 }
 
 .korea-map__svg {

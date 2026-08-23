@@ -1,0 +1,240 @@
+/* ── 카드 형태 (상세 화면 등) ─────────────────────────────── */
+.dino-card {
+  display: flex;
+  padding: 14px;
+  border: var(--px-border) solid var(--px-edge);
+  align-items: center;
+  gap: 16px;
+  background: var(--px-panel-soft);
+  box-shadow: var(--px-shadow-sm);
+}
+
+.dino-card__field {
+  flex: 0 0 auto;
+  line-height: 0;
+}
+
+.dino-card__walk,
+.dino-card__turn {
+  position: relative;
+  width: fit-content;
+}
+
+.dino-card__copy {
+  flex: 1;
+  min-width: 0;
+}
+
+.dino-card__empty {
+  padding: 20px 0;
+  width: 100%;
+  color: var(--px-ink-dim);
+  font-size: 11px;
+  text-align: center;
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--px-accent);
+  font-family: var(--px-font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.dino-card__copy h3 {
+  margin: 4px 0 8px;
+  font-size: 22px;
+}
+
+.comment {
+  margin: 0 0 8px;
+  color: var(--px-ink);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.tip {
+  display: block;
+  color: var(--px-ink-dim);
+  font-size: 11px;
+}
+
+.badges {
+  display: flex;
+  margin: 12px 0 0;
+  padding: 0;
+  flex-wrap: wrap;
+  gap: 5px;
+  list-style: none;
+}
+
+.badges li {
+  padding: 2px 7px;
+  border: 2px solid var(--px-edge);
+  background: #0d1526;
+  color: var(--px-cool);
+  font-family: var(--px-font-display);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.runners-up {
+  margin: 10px 0 0;
+  color: var(--px-ink-dim);
+  font-size: 11px;
+}
+
+/* ── 배경 위에 그대로 서는 모드 ───────────────────────────── */
+.dino-card--bare {
+  padding: 8px 4px 0;
+  border: 0;
+  align-items: flex-end;
+  gap: 28px;
+  background: transparent;
+  box-shadow: none;
+}
+
+/* 왼쪽은 공룡이 오가는 자리, 설명은 오른쪽으로 뺀다 */
+.dino-card--bare .dino-card__field {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.dino-card--bare .dino-card__copy {
+  flex: 0 0 42%;
+  padding-bottom: 10px;
+}
+
+/* 왼쪽에서 가운데까지 또박또박 걸어갔다 되돌아온다 */
+.dino-card--bare .dino-card__walk {
+  animation: dino-pace 18s steps(30, end) infinite;
+}
+
+@keyframes dino-pace {
+  0%,
+  5% {
+    transform: translateX(0);
+  }
+
+  45%,
+  55% {
+    transform: translateX(90%);
+  }
+
+  95%,
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* 끝에 닿으면 몸을 돌린다. scaleX 가 0을 지나가며 도는 것처럼 보인다.
+   스프라이트가 원래 왼쪽을 보고 있어서 -1 이 오른쪽이다. */
+.dino-card--bare .dino-card__turn {
+  animation: dino-turn 18s linear infinite;
+}
+
+@keyframes dino-turn {
+  0%,
+  47% {
+    transform: scaleX(-1);
+  }
+
+  53%,
+  97% {
+    transform: scaleX(1);
+  }
+
+  100% {
+    transform: scaleX(-1);
+  }
+}
+
+/* 계단식 픽셀 그림자 */
+.dino-card__shadow {
+  position: absolute;
+  left: 50%;
+  width: 150px;
+  height: 6px;
+  background: rgb(4 7 14 / 34%);
+  transform: translateX(-50%);
+}
+
+.dino-card__shadow::before {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 18px;
+  width: 114px;
+  height: 4px;
+  background: rgb(4 7 14 / 22%);
+}
+
+/* 잔디처럼 밝은 배경 위에서도 읽히도록 외곽선을 준다 */
+.dino-card--bare .eyebrow,
+.dino-card--bare .tip,
+.dino-card--bare .runners-up,
+.dino-card--bare .dino-card__empty {
+  text-shadow:
+    1px 1px 0 #04070e,
+    -1px 1px 0 #04070e,
+    1px -1px 0 #04070e,
+    -1px -1px 0 #04070e,
+    0 2px 0 #04070e;
+}
+
+.dino-card--bare .comment {
+  color: #fff;
+  font-size: 14px;
+  text-shadow:
+    2px 2px 0 #04070e,
+    -2px 2px 0 #04070e,
+    2px -2px 0 #04070e,
+    -2px -2px 0 #04070e,
+    0 3px 0 #04070e;
+}
+
+.dino-card--bare h3 {
+  font-size: 22px;
+  text-shadow:
+    2px 2px 0 #04070e,
+    -2px 2px 0 #04070e,
+    2px -2px 0 #04070e,
+    -2px -2px 0 #04070e,
+    0 3px 0 #04070e;
+}
+
+.dino-card--bare .tip,
+.dino-card--bare .runners-up {
+  color: #e4ecf8;
+}
+
+.dino-card--bare .badges li {
+  background: rgb(9 14 26 / 78%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dino-card--bare .dino-card__walk,
+  .dino-card--bare .dino-card__turn {
+    animation: none;
+  }
+}
+
+@media (max-width: 700px) {
+  .dino-card,
+  .dino-card--bare {
+    align-items: center;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .dino-card--bare .dino-card__copy {
+    flex: 1 1 auto;
+    text-align: center;
+  }
+
+  /* 좁은 화면에는 걸어다닐 공간이 없다 */
+  .dino-card--bare .dino-card__walk {
+    animation: none;
+  }
+}

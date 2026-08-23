@@ -8,5 +8,5 @@
 .app-content {
   width: var(--px-page);
   margin: 0 auto;
-  padding: 22px 0 64px;
+  padding: 16px 0 64px;
 }

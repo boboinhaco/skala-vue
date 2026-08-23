@@ -5,7 +5,7 @@
 }
 
 .main-nav a {
-  padding: 7px 12px;
+  padding: 9px 14px;
   border: 2px solid var(--px-edge);
   background: var(--px-panel-soft);
   color: var(--px-ink-dim);
@@ -21,7 +21,9 @@
 }
 
 .main-nav a.router-link-exact-active {
+  border-color: var(--px-accent);
   background: var(--px-accent);
+  box-shadow: 0 0 0 2px rgb(245 182 66 / 35%);
   color: var(--px-accent-ink);
 }
 

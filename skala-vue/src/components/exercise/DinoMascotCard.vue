@@ -63,15 +63,26 @@ const conditionBadges = computed(() => {
 <template>
   <section class="dino-card" :class="{ 'dino-card--bare': transparent }">
     <template v-if="todayDino">
-      <div class="dino-card__figure">
-        <PixelDino :dino="todayDino" :weather="dinoWeather" :size="transparent ? DINO_SIZE : 220" />
-        <!-- 땅에 서 있는 것처럼 보이도록 발밑 그림자 -->
-        <span
-          v-if="transparent"
-          class="dino-card__shadow"
-          :style="{ bottom: `${shadowBottom}px` }"
-          aria-hidden="true"
-        ></span>
+      <!-- 공룡이 걸어다니는 자리.
+           이동(walk)과 방향 전환(turn)을 따로 둬야 PixelDino 자체의
+           몸짓(덜덜 떨기 등)과 transform 이 부딪히지 않는다. -->
+      <div class="dino-card__field">
+        <div class="dino-card__walk">
+          <div class="dino-card__turn">
+            <PixelDino
+              :dino="todayDino"
+              :weather="dinoWeather"
+              :size="transparent ? DINO_SIZE : 220"
+            />
+            <!-- 땅에 서 있는 것처럼 보이도록 발밑 그림자 -->
+            <span
+              v-if="transparent"
+              class="dino-card__shadow"
+              :style="{ bottom: `${shadowBottom}px` }"
+              aria-hidden="true"
+            ></span>
+          </div>
+        </div>
       </div>
 
       <div class="dino-card__copy">
@@ -94,188 +105,4 @@ const conditionBadges = computed(() => {
   </section>
 </template>
 
-<style scoped>
-.dino-card {
-  display: flex;
-  padding: 14px;
-  border: var(--px-border) solid var(--px-edge);
-  align-items: center;
-  gap: 16px;
-  background: var(--px-panel-soft);
-  box-shadow: var(--px-shadow-sm);
-}
-
-.dino-card__copy {
-  flex: 1;
-  min-width: 0;
-}
-
-.dino-card__empty {
-  padding: 20px 0;
-  width: 100%;
-  color: var(--px-ink-dim);
-  font-size: 11px;
-  text-align: center;
-}
-
-.eyebrow {
-  margin: 0;
-  color: var(--px-accent);
-  font-family: var(--px-font-display);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-}
-
-.dino-card__copy h3 {
-  margin: 4px 0 8px;
-  font-size: 22px;
-}
-
-.comment {
-  margin: 0 0 8px;
-  color: var(--px-ink);
-  font-size: 14px;
-  line-height: 1.6;
-}
-
-.tip {
-  display: block;
-  color: var(--px-ink-dim);
-  font-size: 11px;
-}
-
-.badges {
-  display: flex;
-  margin: 12px 0 0;
-  padding: 0;
-  flex-wrap: wrap;
-  gap: 5px;
-  list-style: none;
-}
-
-.badges li {
-  padding: 2px 7px;
-  border: 2px solid var(--px-edge);
-  background: #0d1526;
-  color: var(--px-cool);
-  font-family: var(--px-font-display);
-  font-size: 11px;
-  font-weight: 700;
-}
-
-.runners-up {
-  margin: 10px 0 0;
-  color: var(--px-ink-dim);
-  font-size: 11px;
-}
-
-@media (max-width: 560px) {
-  .dino-card {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .badges {
-    justify-content: center;
-  }
-}
-
-/* ── 배경 위에 그대로 서는 모드 ───────────────────────────── */
-.dino-card--bare {
-  padding: 8px 4px 0;
-  border: 0;
-  background: transparent;
-  box-shadow: none;
-  align-items: flex-end;
-  gap: 28px;
-}
-
-.dino-card__figure {
-  position: relative;
-  flex: 0 0 auto;
-  line-height: 0;
-}
-
-/* 계단식 픽셀 그림자 */
-.dino-card__shadow {
-  position: absolute;
-  left: 50%;
-  width: 150px;
-  height: 6px;
-  background: rgb(4 7 14 / 34%);
-  transform: translateX(-50%);
-}
-
-.dino-card__shadow::before {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 18px;
-  width: 114px;
-  height: 4px;
-  background: rgb(4 7 14 / 22%);
-}
-
-/* 배경이 밝든 어둡든 읽히도록 픽셀 게임식 외곽선을 준다 */
-.dino-card--bare .dino-card__copy {
-  padding-bottom: 10px;
-}
-
-/* 잔디처럼 밝은 배경 위에서도 읽히도록 외곽선을 두껍게 준다 */
-.dino-card--bare .eyebrow,
-.dino-card--bare .tip,
-.dino-card--bare .runners-up,
-.dino-card--bare .dino-card__empty {
-  text-shadow:
-    1px 1px 0 #04070e,
-    -1px 1px 0 #04070e,
-    1px -1px 0 #04070e,
-    -1px -1px 0 #04070e,
-    0 2px 0 #04070e;
-}
-
-.dino-card--bare .comment {
-  text-shadow:
-    2px 2px 0 #04070e,
-    -2px 2px 0 #04070e,
-    2px -2px 0 #04070e,
-    -2px -2px 0 #04070e,
-    0 3px 0 #04070e;
-}
-
-.dino-card--bare h3 {
-  font-size: 22px;
-  text-shadow:
-    2px 2px 0 #04070e,
-    -2px 2px 0 #04070e,
-    2px -2px 0 #04070e,
-    -2px -2px 0 #04070e,
-    0 3px 0 #04070e;
-}
-
-.dino-card--bare .comment {
-  color: #fff;
-  font-size: 14px;
-}
-
-.dino-card--bare .tip,
-.dino-card--bare .runners-up {
-  color: #e4ecf8;
-}
-
-.dino-card--bare .badges li {
-  background: rgb(9 14 26 / 78%);
-}
-
-@media (max-width: 700px) {
-  .dino-card--bare {
-    align-items: center;
-    gap: 8px;
-  }
-
-  .dino-card--bare .dino-card__copy {
-    text-align: center;
-  }
-}
-</style>
+<style scoped src="./DinoMascotCard.css"></style>

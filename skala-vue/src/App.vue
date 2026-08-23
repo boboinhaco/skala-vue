@@ -19,9 +19,8 @@ const showWeatherBar = computed(() => route.name !== 'practice')
   <PixelWeatherScene :weather-code="weatherStore.sceneCode" :is-night="weatherStore.sceneIsNight" />
 
   <div class="app-shell">
-    <SiteHeader>
-      <WeatherBar v-if="showWeatherBar" />
-    </SiteHeader>
+    <SiteHeader />
+    <WeatherBar v-if="showWeatherBar" />
 
     <main class="app-content">
       <RouterView />

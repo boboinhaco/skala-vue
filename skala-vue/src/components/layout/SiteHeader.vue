@@ -1,17 +1,19 @@
 <script setup>
 import BrandMark from './BrandMark.vue'
 import MainNav from './MainNav.vue'
+import HeaderScene from './HeaderScene.vue'
 </script>
 
 <template>
-  <header class="site-header">
-    <div class="site-header__inner">
+  <!-- 금색 테두리 배너. 안쪽 풍경은 시간에 따라 낮/밤이 바뀐다.
+       스크롤해도 이 줄만 화면에 남는다. -->
+  <header class="site-banner">
+    <HeaderScene />
+
+    <div class="site-banner__inner">
       <BrandMark />
       <MainNav />
     </div>
-
-    <!-- 화면에 따라 헤더 아래에 덧붙는 줄 (관측 막대 등) -->
-    <slot />
   </header>
 </template>
 

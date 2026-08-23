@@ -70,7 +70,7 @@ const handleUpdateQuery = (newQuery) => {
       <aside class="dashboard__side">
         <BaseDashboardCard
           title="전국 관측망"
-          :subtitle="`17개 시도 · ${observedCount}곳 수신`"
+          :subtitle="`전국 ${weatherStore.weatherList.length}곳 · ${observedCount}곳 수신`"
           class="map-card"
         >
           <PixelKoreaMap
@@ -181,14 +181,28 @@ const handleUpdateQuery = (newQuery) => {
   margin-bottom: 0;
 }
 
-/* 둘째 줄은 내용 높이에 맞춰 각자 크기를 잡는다 */
+/* 둘째 줄도 두 카드 높이를 맞춘다 (내용이 많은 운석 경보가 기준) */
 .dashboard__cols--extra {
   margin-top: 18px;
-  align-items: start;
 }
 
 .extra-card {
+  height: 100%;
   margin-bottom: 0;
+}
+
+.extra-card :deep(.p-card-body) {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+}
+
+/* 남는 세로 공간에서는 내용을 가운데에 둔다 */
+.extra-card :deep(.p-card-content) {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
 }
 
 /* 공룡은 카드 밖으로 나와 배경 위에 선다 */

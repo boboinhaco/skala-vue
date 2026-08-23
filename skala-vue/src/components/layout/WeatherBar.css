@@ -1,13 +1,14 @@
 .weather-bar {
   display: flex;
   width: var(--px-page);
-  margin: 0 auto;
-  padding: 14px 0 16px;
+  margin: 10px auto 0;
+  padding: 14px 18px;
+  border: 2px solid var(--px-edge-light);
   align-items: flex-start;
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 14px 24px;
-  border-top: 2px solid var(--px-edge-light);
+  background: rgb(17 24 41 / 70%);
 }
 
 .weather-bar__title h1 {

@@ -14,36 +14,66 @@ const CACHE_DURATION = 5 * 60 * 1000
 const CITIES = [
   { id: 'seoul', name: '서울', location: '서울특별시', lat: 37.5665, lon: 126.978 },
   { id: 'incheon', name: '인천', location: '인천광역시', lat: 37.4563, lon: 126.7052 },
-  { id: 'gyeonggi', name: '경기', location: '경기도 수원시', lat: 37.2636, lon: 127.0286 },
-  { id: 'gangwon', name: '강원', location: '강원특별자치도 춘천시', lat: 37.8813, lon: 127.7298 },
-  { id: 'chungbuk', name: '충북', location: '충청북도 청주시', lat: 36.6424, lon: 127.489 },
-  { id: 'chungnam', name: '충남', location: '충청남도 홍성군', lat: 36.6009, lon: 126.665 },
+  { id: 'suwon', name: '수원', location: '경기도 수원시', lat: 37.2636, lon: 127.0286 },
+  { id: 'goyang', name: '고양', location: '경기도 고양시', lat: 37.6584, lon: 126.832 },
+  { id: 'yongin', name: '용인', location: '경기도 용인시', lat: 37.2411, lon: 127.1776 },
+  { id: 'seongnam', name: '성남', location: '경기도 성남시', lat: 37.42, lon: 127.1265 },
+  { id: 'bucheon', name: '부천', location: '경기도 부천시', lat: 37.5035, lon: 126.766 },
+  { id: 'ansan', name: '안산', location: '경기도 안산시', lat: 37.3219, lon: 126.8309 },
+  { id: 'pyeongtaek', name: '평택', location: '경기도 평택시', lat: 36.9921, lon: 127.1129 },
+  { id: 'uijeongbu', name: '의정부', location: '경기도 의정부시', lat: 37.7381, lon: 127.0337 },
+  { id: 'paju', name: '파주', location: '경기도 파주시', lat: 37.7599, lon: 126.78 },
+  { id: 'chuncheon', name: '춘천', location: '강원특별자치도 춘천시', lat: 37.8813, lon: 127.7298 },
+  { id: 'wonju', name: '원주', location: '강원특별자치도 원주시', lat: 37.3422, lon: 127.9202 },
+  { id: 'gangneung', name: '강릉', location: '강원특별자치도 강릉시', lat: 37.7519, lon: 128.8761 },
+  { id: 'sokcho', name: '속초', location: '강원특별자치도 속초시', lat: 38.207, lon: 128.5918 },
+  { id: 'donghae', name: '동해', location: '강원특별자치도 동해시', lat: 37.5247, lon: 129.1143 },
+  { id: 'cheongju', name: '청주', location: '충청북도 청주시', lat: 36.6424, lon: 127.489 },
+  { id: 'chungju', name: '충주', location: '충청북도 충주시', lat: 36.991, lon: 127.9259 },
+  { id: 'jecheon', name: '제천', location: '충청북도 제천시', lat: 37.1326, lon: 128.191 },
   { id: 'sejong', name: '세종', location: '세종특별자치시', lat: 36.48, lon: 127.289 },
   { id: 'daejeon', name: '대전', location: '대전광역시', lat: 36.3504, lon: 127.3845 },
-  { id: 'jeonbuk', name: '전북', location: '전북특별자치도 전주시', lat: 35.8242, lon: 127.148 },
+  { id: 'cheonan', name: '천안', location: '충청남도 천안시', lat: 36.8151, lon: 127.1139 },
+  { id: 'asan', name: '아산', location: '충청남도 아산시', lat: 36.7898, lon: 127.0018 },
+  { id: 'seosan', name: '서산', location: '충청남도 서산시', lat: 36.7848, lon: 126.4503 },
+  { id: 'boryeong', name: '보령', location: '충청남도 보령시', lat: 36.3333, lon: 126.6128 },
+  { id: 'gongju', name: '공주', location: '충청남도 공주시', lat: 36.4465, lon: 127.1189 },
+  { id: 'jeonju', name: '전주', location: '전북특별자치도 전주시', lat: 35.8242, lon: 127.148 },
+  { id: 'gunsan', name: '군산', location: '전북특별자치도 군산시', lat: 35.9676, lon: 126.7369 },
+  { id: 'iksan', name: '익산', location: '전북특별자치도 익산시', lat: 35.9483, lon: 126.9576 },
+  { id: 'namwon', name: '남원', location: '전북특별자치도 남원시', lat: 35.4164, lon: 127.3905 },
   { id: 'gwangju', name: '광주', location: '광주광역시', lat: 35.1595, lon: 126.8526 },
-  { id: 'jeonnam', name: '전남', location: '전라남도 무안군', lat: 34.99, lon: 126.483 },
-  { id: 'gyeongbuk', name: '경북', location: '경상북도 안동시', lat: 36.5684, lon: 128.7294 },
+  { id: 'mokpo', name: '목포', location: '전라남도 목포시', lat: 34.8118, lon: 126.3922 },
+  { id: 'yeosu', name: '여수', location: '전라남도 여수시', lat: 34.7604, lon: 127.6622 },
+  { id: 'suncheon', name: '순천', location: '전라남도 순천시', lat: 34.9506, lon: 127.4872 },
+  { id: 'gwangyang', name: '광양', location: '전라남도 광양시', lat: 34.9407, lon: 127.6959 },
+  { id: 'naju', name: '나주', location: '전라남도 나주시', lat: 35.016, lon: 126.7108 },
   { id: 'daegu', name: '대구', location: '대구광역시', lat: 35.8714, lon: 128.6014 },
-  { id: 'ulsan', name: '울산', location: '울산광역시', lat: 35.5384, lon: 129.3114 },
-  { id: 'gyeongnam', name: '경남', location: '경상남도 창원시', lat: 35.228, lon: 128.6811 },
+  { id: 'pohang', name: '포항', location: '경상북도 포항시', lat: 36.019, lon: 129.3435 },
+  { id: 'gyeongju', name: '경주', location: '경상북도 경주시', lat: 35.8562, lon: 129.2247 },
+  { id: 'andong', name: '안동', location: '경상북도 안동시', lat: 36.5684, lon: 128.7294 },
+  { id: 'gumi', name: '구미', location: '경상북도 구미시', lat: 36.1196, lon: 128.3446 },
+  { id: 'gimcheon', name: '김천', location: '경상북도 김천시', lat: 36.1398, lon: 128.1136 },
+  { id: 'yeongju', name: '영주', location: '경상북도 영주시', lat: 36.8056, lon: 128.6239 },
   { id: 'busan', name: '부산', location: '부산광역시', lat: 35.1796, lon: 129.0756 },
-  { id: 'jeju', name: '제주', location: '제주특별자치도', lat: 33.4996, lon: 126.5312 },
+  { id: 'ulsan', name: '울산', location: '울산광역시', lat: 35.5384, lon: 129.3114 },
+  { id: 'changwon', name: '창원', location: '경상남도 창원시', lat: 35.228, lon: 128.6811 },
+  { id: 'jinju', name: '진주', location: '경상남도 진주시', lat: 35.18, lon: 128.1076 },
+  { id: 'gimhae', name: '김해', location: '경상남도 김해시', lat: 35.2285, lon: 128.8894 },
+  { id: 'tongyeong', name: '통영', location: '경상남도 통영시', lat: 34.8544, lon: 128.4331 },
+  { id: 'geoje', name: '거제', location: '경상남도 거제시', lat: 34.8806, lon: 128.6211 },
+  { id: 'miryang', name: '밀양', location: '경상남도 밀양시', lat: 35.5038, lon: 128.7469 },
+  { id: 'jeju', name: '제주', location: '제주특별자치도 제주시', lat: 33.4996, lon: 126.5312 },
+  {
+    id: 'seogwipo',
+    name: '서귀포',
+    location: '제주특별자치도 서귀포시',
+    lat: 33.2541,
+    lon: 126.5601,
+  },
 ]
 
 export { CITIES }
-
-// 대기질 응답에서 지수와 미세먼지 농도를 뽑는다
-const readAir = (result) => {
-  if (result?.status !== 'fulfilled') return { aqi: null, pm25: null, pm10: null }
-
-  const entry = result.value.data.list?.[0]
-  return {
-    aqi: entry?.main?.aqi ?? null,
-    pm25: entry?.components?.pm2_5 ?? null,
-    pm10: entry?.components?.pm10 ?? null,
-  }
-}
 
 const createEmptyWeather = (city) => ({
   ...city,
@@ -72,12 +102,20 @@ export const useWeatherStore = defineStore('weather', () => {
     return weatherList.value.some((item) => typeof item.temp === 'number')
   })
 
+  // 따로 받아둔 대기질을 도시 정보에 얹는다
+  const withAir = (item) => {
+    if (!item) return null
+
+    const air = airByCity.value[item.id]
+    return air ? { ...item, aqi: air.aqi, pm25: air.pm25, pm10: air.pm10 } : item
+  }
+
   // 고른 도시가 없거나 아직 데이터가 없으면 값이 들어온 첫 도시를 쓴다
   const selectedWeather = computed(() => {
     const picked = weatherList.value.find((item) => item.id === selectedCityId.value)
-    if (picked && typeof picked.temp === 'number') return picked
+    if (picked && typeof picked.temp === 'number') return withAir(picked)
 
-    return weatherList.value.find((item) => typeof item.temp === 'number') ?? null
+    return withAir(weatherList.value.find((item) => typeof item.temp === 'number') ?? null)
   })
 
   // 배경 화면이 쓰는 값
@@ -86,6 +124,38 @@ export const useWeatherStore = defineStore('weather', () => {
 
   const selectCity = (cityId) => {
     selectedCityId.value = cityId
+  }
+
+  // ── 대기질 (보고 있는 지역만) ──────────────────────────────
+  // 도시 카드에는 안 쓰이고 공룡·운석 경보에서만 쓰여서, 전부 받으면 낭비다.
+  const airByCity = ref({})
+
+  const fetchAir = async (cityId) => {
+    const city = CITIES.find((item) => item.id === cityId)
+    if (!city || !API_KEY) return
+
+    const cached = airByCity.value[cityId]
+    if (cached && Date.now() - cached.fetchedAt < CACHE_DURATION) return
+
+    try {
+      const { data } = await axios.get(AIR_URL, {
+        params: { lat: city.lat, lon: city.lon, appid: API_KEY },
+      })
+      const entry = data.list?.[0]
+
+      airByCity.value = {
+        ...airByCity.value,
+        [cityId]: {
+          fetchedAt: Date.now(),
+          aqi: entry?.main?.aqi ?? null,
+          pm25: entry?.components?.pm2_5 ?? null,
+          pm10: entry?.components?.pm10 ?? null,
+        },
+      }
+    } catch (error) {
+      // 대기질이 없어도 날씨 표시에는 지장이 없다
+      console.error('OpenWeather 대기질 요청 실패:', error)
+    }
   }
 
   // ── 시간별 예보 (보고 있는 지역만) ─────────────────────────
@@ -140,13 +210,16 @@ export const useWeatherStore = defineStore('weather', () => {
   watch(
     () => selectedWeather.value?.id,
     (cityId) => {
-      if (cityId) fetchForecast(cityId)
+      if (!cityId) return
+
+      fetchForecast(cityId)
+      fetchAir(cityId)
     },
     { immediate: true },
   )
 
   const getWeatherById = computed(() => {
-    return (cityId) => weatherList.value.find((item) => item.id === cityId) ?? null
+    return (cityId) => withAir(weatherList.value.find((item) => item.id === cityId) ?? null)
   })
 
   const fetchWeather = async (force = false) => {
@@ -166,29 +239,21 @@ export const useWeatherStore = defineStore('weather', () => {
     errorMessage.value = ''
 
     try {
-      // 날씨와 대기질을 함께 요청한다 (대기질은 실패해도 날씨 표시에 영향을 주지 않는다)
-      const [results, airResults] = await Promise.all([
-        Promise.allSettled(
-          CITIES.map((city) =>
-            axios.get(API_URL, {
-              params: {
-                lat: city.lat,
-                lon: city.lon,
-                appid: API_KEY,
-                units: 'metric',
-                lang: 'kr',
-              },
-            }),
-          ),
+      // 도시 수만큼만 요청한다.
+      // 대기질은 지금 보고 있는 곳에서만 쓰이므로 여기서 전부 받지 않는다.
+      const results = await Promise.allSettled(
+        CITIES.map((city) =>
+          axios.get(API_URL, {
+            params: {
+              lat: city.lat,
+              lon: city.lon,
+              appid: API_KEY,
+              units: 'metric',
+              lang: 'kr',
+            },
+          }),
         ),
-        Promise.allSettled(
-          CITIES.map((city) =>
-            axios.get(AIR_URL, {
-              params: { lat: city.lat, lon: city.lon, appid: API_KEY },
-            }),
-          ),
-        ),
-      ])
+      )
 
       let successCount = 0
 
@@ -205,7 +270,6 @@ export const useWeatherStore = defineStore('weather', () => {
         successCount++
         const data = result.value.data
         const condition = data.weather?.[0] ?? null
-        const airResult = airResults[index]
 
         return {
           ...city,
@@ -220,7 +284,6 @@ export const useWeatherStore = defineStore('weather', () => {
           isNight: condition?.icon?.endsWith('n') ?? false,
           // 자외선 추정에 쓰는 구름량(%)
           clouds: data.clouds?.all ?? null,
-          ...readAir(airResult),
         }
       })
 
@@ -258,5 +321,6 @@ export const useWeatherStore = defineStore('weather', () => {
     selectedForecast,
     isForecastLoading,
     fetchForecast,
+    fetchAir,
   }
 })
