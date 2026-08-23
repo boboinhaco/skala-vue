@@ -1,11 +1,21 @@
 <script setup>
+import { computed } from 'vue'
+import Button from 'primevue/button'
+import Tag from 'primevue/tag'
+import PixelWeatherChip from '@/components/scene/PixelWeatherChip.vue'
 import { useTemperature } from '@/composables/useTemperature'
+import { toWmoCode, msToKmh } from '@/data/openWeatherToWmo'
+import { sceneFor } from '@/data/weatherScenes'
 
 // 선택된 도시 객체 하나를 전달받아 표시한다
-defineProps({
+const props = defineProps({
   item: {
     type: Object,
     required: true,
+  },
+  selected: {
+    type: Boolean,
+    default: false,
   },
 })
 
@@ -13,117 +23,190 @@ defineProps({
 const emit = defineEmits(['select-card', 'click-detail'])
 
 const { configStore, formatTemperature } = useTemperature()
+
+const hasData = computed(() => typeof props.item.temp === 'number')
+const scene = computed(() => sceneFor(toWmoCode(props.item.conditionId), props.item.isNight))
+
+// 온도 구간을 태그 색으로
+const band = computed(() => {
+  if (!hasData.value) return { label: '데이터 없음', severity: 'secondary' }
+  if (props.item.temp >= 30) return { label: '슈퍼핫', severity: 'danger' }
+  if (props.item.temp >= 25) return { label: '더움', severity: 'warn' }
+  if (props.item.temp >= 10) return { label: '선선함', severity: 'info' }
+  return { label: '쌀쌀함', severity: 'success' }
+})
 </script>
 
 <template>
-  <div class="weather-card" @click="emit('select-card', item)">
-    <h4>{{ item.name }} ({{ item.status }})</h4>
-    <p v-if="typeof item.temp === 'number'">
-      현재 온도: {{ formatTemperature(item.temp) }}{{ configStore.unitSymbol }}
-    </p>
-    <p v-else>현재 온도: --</p>
+  <article
+    class="weather-card"
+    :class="{ 'weather-card--on': selected }"
+    tabindex="0"
+    role="button"
+    :aria-pressed="selected"
+    @click="emit('select-card', item)"
+    @keydown.enter.prevent="emit('select-card', item)"
+    @keydown.space.prevent="emit('select-card', item)"
+  >
+    <div class="weather-card__chip">
+      <PixelWeatherChip :weather-code="toWmoCode(item.conditionId)" :is-night="item.isNight" />
+    </div>
 
-    <template v-if="typeof item.temp === 'number'">
-      <span v-if="item.temp >= 30" class="badge sohot">
-        슈퍼핫🥵 너무 더움 ({{ formatTemperature(30) }}{{ configStore.unitSymbol }} 이상)
-      </span>
-      <span v-else-if="item.temp >= 25" class="badge hot">
-        더움🫠 ({{ formatTemperature(25) }}{{ configStore.unitSymbol }} 이상
-        {{ formatTemperature(30) }}{{ configStore.unitSymbol }} 미만)
-      </span>
-      <span v-else class="badge cool">
-        선선함🙂‍↔️ ({{ formatTemperature(25) }}{{ configStore.unitSymbol }} 미만)
-      </span>
-    </template>
-    <span v-else class="badge unavailable">실시간 데이터 없음</span>
+    <div class="weather-card__body">
+      <div class="weather-card__head">
+        <h4>{{ item.name }}</h4>
+        <Tag :value="band.label" :severity="band.severity" />
+      </div>
 
-    <button
-      class="btn-detail"
-      :disabled="typeof item.temp !== 'number'"
-      @click.stop="emit('click-detail', item)"
-    >
-      상세보기
-    </button>
-  </div>
+      <p class="weather-card__status">{{ scene.label }} · {{ item.status }}</p>
+
+      <ul class="weather-card__stats">
+        <li v-if="hasData">
+          습도 <strong>{{ item.humidity }}%</strong>
+        </li>
+        <li v-if="hasData">
+          바람 <strong>{{ msToKmh(item.windSpeed) }}km/h</strong>
+        </li>
+      </ul>
+    </div>
+
+    <div class="weather-card__end">
+      <p class="weather-card__temp">
+        {{ formatTemperature(item.temp) }}<span>{{ configStore.unitSymbol }}</span>
+      </p>
+      <Button
+        label="상세"
+        icon="pi pi-angle-right"
+        icon-pos="right"
+        severity="secondary"
+        size="small"
+        @click.stop="emit('click-detail', item)"
+      />
+    </div>
+
+    <span v-if="selected" class="weather-card__flag">배경 적용 중</span>
+  </article>
 </template>
 
 <style scoped>
 .weather-card {
   position: relative;
+  display: flex;
   margin-bottom: 12px;
-  padding: 16px 128px 16px 16px;
-  background: #fff;
-  border: 1px solid #dfe8ef;
-  border-radius: 10px;
+  padding: 12px;
+  border: var(--px-border) solid var(--px-edge);
+  align-items: center;
+  gap: 12px;
+  background: var(--px-panel-soft);
+  box-shadow: var(--px-shadow-sm);
   cursor: pointer;
-  transition: 0.2s ease;
-}
-.weather-card:hover {
-  border-color: #9ed3eb;
-  box-shadow: 0 6px 18px rgb(44 62 80 / 8%);
-  transform: translateY(-1px);
-}
-.weather-card h4 {
-  margin: 0 0 4px;
-  color: #2c3e50;
-  font-size: 1rem;
-  font-weight: 800;
-}
-.weather-card p {
-  margin: 0 0 10px;
-  color: #6f8395;
-}
-.badge {
-  display: inline-block;
-  padding: 4px 8px;
-  font-size: 12px;
-  border-radius: 4px;
-  color: #fff;
-}
-.sohot {
-  background-color: #ff7675;
-}
-.hot {
-  background-color: #ebad55;
-}
-.cool {
-  background-color: #74b9ff;
-}
-.unavailable {
-  background-color: #95a5a6;
-}
-.btn-detail {
-  position: absolute;
-  top: 50%;
-  right: 16px;
-  padding: 8px 12px;
-  border: 0;
-  border-radius: 7px;
-  background: #eaf6fc;
-  color: #1678a8;
-  cursor: pointer;
-  font-weight: 700;
-  transform: translateY(-50%);
-}
-.btn-detail:hover {
-  background: #249dd8;
-  color: #fff;
-}
-.btn-detail:disabled {
-  cursor: not-allowed;
-  opacity: 0.45;
+  transition:
+    transform 0.06s steps(1, end),
+    box-shadow 0.06s steps(1, end);
 }
 
-@media (max-width: 520px) {
+.weather-card:hover,
+.weather-card:focus-visible {
+  outline: 0;
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 rgb(3 6 14 / 55%);
+}
+
+.weather-card--on {
+  border-color: var(--px-accent);
+  background: #24314f;
+}
+
+.weather-card__chip {
+  flex: 0 0 auto;
+  width: 72px;
+  height: 52px;
+  border: 2px solid var(--px-edge);
+  overflow: hidden;
+}
+
+.weather-card__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.weather-card__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.weather-card__head h4 {
+  margin: 0;
+  font-family: var(--px-font-display);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.weather-card__status {
+  margin: 4px 0 0;
+  color: var(--px-ink-dim);
+  font-size: 11px;
+}
+
+.weather-card__stats {
+  display: flex;
+  margin: 6px 0 0;
+  padding: 0;
+  gap: 12px;
+  color: var(--px-ink-dim);
+  font-size: 11px;
+  list-style: none;
+}
+
+.weather-card__stats strong {
+  color: var(--px-ink);
+}
+
+.weather-card__end {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: flex-end;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.weather-card__temp {
+  margin: 0;
+  color: var(--px-accent);
+  font-family: var(--px-font-display);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.weather-card__temp span {
+  font-size: 11px;
+}
+
+.weather-card__flag {
+  position: absolute;
+  top: -9px;
+  left: 10px;
+  padding: 1px 6px;
+  border: 2px solid var(--px-edge);
+  background: var(--px-accent);
+  color: var(--px-accent-ink);
+  font-family: var(--px-font-display);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+@media (max-width: 560px) {
   .weather-card {
-    padding-right: 16px;
+    flex-wrap: wrap;
   }
 
-  .btn-detail {
-    position: static;
+  .weather-card__end {
+    align-items: flex-start;
+    flex-direction: row;
     width: 100%;
-    margin-top: 12px;
-    transform: none;
+    justify-content: space-between;
   }
 }
 </style>

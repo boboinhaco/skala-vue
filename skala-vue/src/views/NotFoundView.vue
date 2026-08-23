@@ -1,53 +1,42 @@
 <script setup>
-import { RouterLink } from 'vue-router'
+import { useRouter } from 'vue-router'
+import Button from 'primevue/button'
+
+const router = useRouter()
 </script>
 
 <template>
-  <main class="not-found-page">
-    <div class="weather-icon" aria-hidden="true">🌞❓</div>
-    <h2>페이지를 찾을 수 없습니다</h2>
-    <p>요청하신 주소가 존재하지 않거나 아직 개발되지 않았습니다.</p>
-
-    <RouterLink class="home-link" :to="{ name: 'weather-home' }"> 날씨 메인으로 이동 </RouterLink>
-  </main>
+  <div class="not-found">
+    <span class="px-eyebrow">ERROR 404</span>
+    <h1>길을 잃었습니다</h1>
+    <p class="px-dim">
+      요청하신 주소는 중생대 어디에도 없습니다. 관측소로 돌아가 다시 시도해 주세요.
+    </p>
+    <Button
+      label="관측소로 돌아가기"
+      icon="pi pi-home"
+      @click="router.push({ name: 'weather-home' })"
+    />
+  </div>
 </template>
 
 <style scoped>
-.not-found-page {
-  width: 100%;
-  max-width: 560px;
-  margin: 80px auto 0;
-  padding: 56px 32px;
-  border-radius: 14px;
-  background: #fff;
-  box-shadow: 0 4px 18px rgb(44 62 80 / 12%);
-  color: #2c3e50;
+.not-found {
+  padding: 40px 24px;
+  border: var(--px-border) solid var(--px-edge);
+  background: var(--px-panel);
+  box-shadow:
+    inset 0 0 0 2px var(--px-edge-light),
+    var(--px-shadow);
   text-align: center;
 }
 
-.weather-icon {
-  margin-bottom: 20px;
-  font-size: 4rem;
+.not-found h1 {
+  margin: 8px 0 10px;
 }
 
-h2 {
-  margin-bottom: 10px;
-  font-size: 1.6rem;
-  font-weight: 700;
-}
-
-p {
-  margin-bottom: 26px;
-  color: #7f8c8d;
-}
-
-.home-link {
-  display: inline-block;
-  padding: 10px 20px;
-  border-radius: 24px;
-  background: #249dd8;
-  color: #fff;
-  font-weight: 700;
-  text-decoration: none;
+.not-found p {
+  margin: 0 auto 20px;
+  max-width: 380px;
 }
 </style>

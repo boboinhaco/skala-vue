@@ -1,15 +1,25 @@
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useToast } from 'primevue/usetoast'
+import Button from 'primevue/button'
+import Message from 'primevue/message'
+import ProgressSpinner from 'primevue/progressspinner'
+import Divider from 'primevue/divider'
 import BaseDashboardCard from '@/components/exercise/BaseDashboardCard.vue'
 import SearchBar from '@/components/exercise/SearchBar.vue'
 import WeatherCard from '@/components/exercise/WeatherCard.vue'
 import UnitToggle from '@/components/exercise/UnitToggle.vue'
 import DinoMascotCard from '@/components/exercise/DinoMascotCard.vue'
+import PixelKoreaMap from '@/components/scene/PixelKoreaMap.vue'
 import { useWeatherStore } from '@/stores/weatherStore'
+import { useTemperature } from '@/composables/useTemperature'
+import { sceneFor } from '@/data/weatherScenes'
 
 const router = useRouter()
 const weatherStore = useWeatherStore()
+const toast = useToast()
+const { configStore, formatTemperature } = useTemperature()
 
 const searchQuery = ref('')
 const filteredWeatherList = computed(() => {
@@ -21,252 +31,290 @@ const filteredWeatherList = computed(() => {
 
 const lastUpdatedLabel = computed(() => {
   if (!weatherStore.lastUpdated) return '업데이트 대기 중'
-  return `마지막 업데이트: ${weatherStore.lastUpdated.toLocaleTimeString('ko-KR')}`
+  return `마지막 관측 ${weatherStore.lastUpdated.toLocaleTimeString('ko-KR')}`
 })
+
+const currentScene = computed(() => sceneFor(weatherStore.sceneCode, weatherStore.sceneIsNight))
+const selected = computed(() => weatherStore.selectedWeather)
+const observedCount = computed(
+  () => weatherStore.weatherList.filter((item) => typeof item.temp === 'number').length,
+)
 
 onMounted(() => {
   weatherStore.fetchWeather()
-})
-
-// 공룡 카드에 보여줄 도시. 선택 전에는 데이터가 들어온 첫 도시를 쓴다
-const selectedCityId = ref(null)
-const selectedWeather = computed(() => {
-  const list = weatherStore.weatherList
-  const selected = list.find((item) => item.id === selectedCityId.value)
-  if (selected && typeof selected.temp === 'number') return selected
-
-  return list.find((item) => typeof item.temp === 'number') ?? null
-})
-
-const selectedCityInfo = ref('카드를 클릭하거나 검색해보세요.')
-watch(selectedCityInfo, (newValue, oldValue) => {
-  console.log(`[watch 감지] ${oldValue} → ${newValue}`)
 })
 
 const handleUpdateQuery = (newQuery) => {
   searchQuery.value = newQuery
 }
 
+// 카드를 고르면 배경 화면이 그 도시 날씨로 바뀐다
 const handleSelectCard = (item) => {
-  selectedCityId.value = item.id
-  selectedCityInfo.value = `${item.name}이(가) 선택되었습니다.`
+  weatherStore.selectCity(item.id)
+
+  toast.add({
+    severity: 'success',
+    summary: `${item.name} 관측소`,
+    detail: `배경이 '${currentScene.value.label}' 화면으로 바뀌었습니다.`,
+    life: 2600,
+  })
+}
+
+// 지도 마커는 도시 id만 넘겨준다
+const handleSelectId = (cityId) => {
+  const item = weatherStore.weatherList.find((city) => city.id === cityId)
+  if (item) handleSelectCard(item)
 }
 
 const showDetail = (item) => {
-  router.push({
-    name: 'weather-detail',
-    params: { cityId: item.id },
-  })
+  router.push({ name: 'weather-detail', params: { cityId: item.id } })
 }
 </script>
 
 <template>
-  <main class="dashboard-wrapper">
-    <header class="page-heading">
-      <span class="eyebrow">LIVE WEATHER</span>
-      <h1>오늘의 도시별 날씨</h1>
-      <p>도시를 검색하고 카드를 눌러 상세한 기상 정보를 확인하세요.</p>
+  <div class="dashboard">
+    <!-- 왼쪽: 전국 지도 -->
+    <aside class="dashboard__side">
+      <BaseDashboardCard
+        title="전국 관측망"
+        :subtitle="`17개 시도 · ${observedCount}곳 수신`"
+        class="map-card"
+      >
+        <PixelKoreaMap
+          :cities="weatherStore.weatherList"
+          :selected-id="selected?.id"
+          @select="handleSelectId"
+        />
 
-      <div class="dashboard-controls">
-        <UnitToggle />
-        <button
-          type="button"
-          class="refresh-button"
-          :disabled="weatherStore.isLoading"
-          @click="weatherStore.fetchWeather(true)"
+        <div v-if="selected" class="side-now">
+          <p class="px-eyebrow">지금 보는 곳</p>
+          <h3>{{ selected.name }}</h3>
+          <p class="side-now__scene">{{ currentScene.label }} · {{ selected.status }}</p>
+          <ul class="side-now__stats">
+            <li>
+              기온
+              <strong>{{ formatTemperature(selected.temp) }}{{ configStore.unitSymbol }}</strong>
+            </li>
+            <li>
+              습도 <strong>{{ selected.humidity }}%</strong>
+            </li>
+          </ul>
+        </div>
+      </BaseDashboardCard>
+    </aside>
+
+    <!-- 오른쪽: 기존 패널들 -->
+    <div class="dashboard__main">
+      <header class="hero">
+        <span class="px-eyebrow">MESOZOIC WEATHER STATION</span>
+        <h1>오늘의 전국 날씨</h1>
+        <p class="hero__lead">
+          왼쪽 지도나 아래 카드를 누르면 배경이 그 지역의 하늘로 바뀝니다. 지금은
+          <strong>{{ currentScene.label }}</strong> 화면입니다.
+        </p>
+
+        <div class="hero__controls">
+          <UnitToggle />
+          <Button
+            :label="weatherStore.isLoading ? '관측 중...' : '다시 관측'"
+            icon="pi pi-refresh"
+            :disabled="weatherStore.isLoading"
+            @click="weatherStore.fetchWeather(true)"
+          />
+          <span class="px-dim">{{ lastUpdatedLabel }}</span>
+        </div>
+      </header>
+
+      <BaseDashboardCard title="지역 검색" subtitle="이름으로 관측소를 걸러냅니다">
+        <SearchBar :search-query="searchQuery" @update-query="handleUpdateQuery" />
+      </BaseDashboardCard>
+
+      <BaseDashboardCard title="시도별 관측소" subtitle="카드를 누르면 배경이 바뀝니다">
+        <div v-if="weatherStore.isLoading && !weatherStore.hasWeatherData" class="loading">
+          <ProgressSpinner style="width: 44px; height: 44px" :stroke-width="8" />
+          <p class="px-dim">실시간 날씨를 불러오는 중입니다.</p>
+        </div>
+
+        <Message
+          v-if="weatherStore.errorMessage"
+          severity="error"
+          :closable="false"
+          class="error-message"
         >
-          {{ weatherStore.isLoading ? '업데이트 중...' : '날씨 새로고침' }}
-        </button>
-      </div>
-      <small class="updated-at">{{ lastUpdatedLabel }}</small>
-    </header>
+          <div class="error-message__row">
+            <span>{{ weatherStore.errorMessage }}</span>
+            <Button
+              label="다시 시도"
+              size="small"
+              :disabled="weatherStore.isLoading"
+              @click="weatherStore.fetchWeather(true)"
+            />
+          </div>
+        </Message>
 
-    <BaseDashboardCard>
-      <h2>🔍 도시 검색</h2>
-      <SearchBar :search-query="searchQuery" @update-query="handleUpdateQuery" />
-    </BaseDashboardCard>
+        <div class="city-grid">
+          <WeatherCard
+            v-for="item in filteredWeatherList"
+            :key="item.id"
+            :item="item"
+            :selected="selected?.id === item.id"
+            @select-card="handleSelectCard"
+            @click-detail="showDetail"
+          />
+        </div>
 
-    <BaseDashboardCard>
-      <h2>🗺️ 지역별 날씨 현황</h2>
+        <p v-if="!weatherStore.isLoading && filteredWeatherList.length === 0" class="empty">
+          검색 결과와 일치하는 지역이 없습니다.
+        </p>
+      </BaseDashboardCard>
 
-      <p v-if="weatherStore.isLoading && !weatherStore.hasWeatherData" class="loading-message">
-        실시간 날씨 정보를 불러오는 중입니다.
-      </p>
-
-      <div v-if="weatherStore.errorMessage" class="error-banner">
-        <span>{{ weatherStore.errorMessage }}</span>
-        <button
-          type="button"
-          :disabled="weatherStore.isLoading"
-          @click="weatherStore.fetchWeather(true)"
-        >
-          다시 시도
-        </button>
-      </div>
-
-      <WeatherCard
-        v-for="item in filteredWeatherList"
-        :key="item.id"
-        :item="item"
-        @select-card="handleSelectCard"
-        @click-detail="showDetail"
-      />
-
-      <p v-if="!weatherStore.isLoading && filteredWeatherList.length === 0" class="empty-message">
-        검색 결과와 일치하는 도시가 없습니다.
-      </p>
-    </BaseDashboardCard>
-
-    <BaseDashboardCard>
-      <h2>🦕 오늘의 공룡</h2>
-      <p class="dino-hint">위 카드를 클릭하면 해당 도시 날씨에 맞는 공룡으로 바뀝니다.</p>
-      <DinoMascotCard :weather="selectedWeather" />
-    </BaseDashboardCard>
-
-    <div class="status-bar">{{ selectedCityInfo }}</div>
-  </main>
+      <BaseDashboardCard title="오늘의 공룡" subtitle="고른 지역 날씨에 맞는 마스코트">
+        <DinoMascotCard :weather="selected" />
+        <Divider />
+        <p class="px-dim">
+          기온 · 습도 · 풍속 · 대기질을 점수로 매겨 30종 중 가장 잘 맞는 공룡을 고릅니다.
+        </p>
+      </BaseDashboardCard>
+    </div>
+  </div>
 </template>
 
 <style scoped>
-.dashboard-wrapper {
-  width: 100%;
-  max-width: 760px;
-  margin: 0 auto;
-  color: #2c3e50;
+.dashboard {
+  display: grid;
+  align-items: start;
+  gap: 18px;
+  grid-template-columns: 320px minmax(0, 1fr);
 }
 
-.page-heading {
-  margin-bottom: 26px;
+/* 지도는 스크롤해도 계속 보이게 */
+.dashboard__side {
+  position: sticky;
+  top: 96px;
 }
 
-.eyebrow {
-  display: inline-block;
-  margin-bottom: 6px;
-  color: #249dd8;
-  font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
+.map-card {
+  margin-bottom: 0;
 }
 
-.page-heading h1 {
+.side-now {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 2px solid var(--px-edge-light);
+}
+
+.side-now h3 {
+  margin: 2px 0 4px;
+}
+
+.side-now__scene {
   margin: 0;
-  color: #20364b;
-  font-size: clamp(1.8rem, 4vw, 2.4rem);
-  font-weight: 800;
-  letter-spacing: -0.04em;
+  color: var(--px-ink-dim);
+  font-size: 11px;
 }
 
-.page-heading p {
-  margin: 8px 0 0;
-  color: #6f8395;
-}
-
-.dashboard-controls {
+.side-now__stats {
   display: flex;
-  margin-top: 18px;
-  align-items: center;
+  margin: 10px 0 0;
+  padding: 0;
+  gap: 14px;
+  color: var(--px-ink-dim);
+  font-size: 11px;
+  list-style: none;
+}
+
+.side-now__stats strong {
+  color: var(--px-accent);
+  font-family: var(--px-font-display);
+  font-weight: 700;
+}
+
+/* 17개 시도라 두 줄로 벌려 담는다 */
+.city-grid {
+  display: grid;
   gap: 10px;
-  flex-wrap: wrap;
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
 }
 
-.dashboard-controls :deep(.unit-toggle) {
-  margin-top: 0;
+.hero {
+  margin-bottom: 18px;
+  padding: 18px;
+  border: var(--px-border) solid var(--px-edge);
+  background: var(--px-panel);
+  box-shadow:
+    inset 0 0 0 2px var(--px-edge-light),
+    var(--px-shadow);
 }
 
-.refresh-button,
-.error-banner button {
-  padding: 10px 14px;
-  border: 0;
-  border-radius: 8px;
-  background: #2c3e50;
-  color: #fff;
-  cursor: pointer;
-  font-size: 0.84rem;
+.hero h1 {
+  margin: 6px 0 0;
+}
+
+.hero__lead {
+  margin: 8px 0 0;
+  color: var(--px-ink-dim);
+  font-size: 11px;
+}
+
+.hero__lead strong {
+  color: var(--px-accent);
+  font-family: var(--px-font-display);
   font-weight: 700;
 }
 
-.refresh-button:disabled,
-.error-banner button:disabled {
-  cursor: wait;
-  opacity: 0.6;
-}
-
-.updated-at {
-  display: block;
-  margin-top: 8px;
-  color: #8ba0b2;
-  font-size: 0.76rem;
-}
-
-h2 {
-  margin: 0 0 12px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid #e9ecef;
-  color: #34495e;
-  font-size: 1.1rem;
-  font-weight: 700;
-}
-
-.dino-hint {
-  margin: 0 0 12px;
-  color: #8ba0b2;
-  font-size: 0.8rem;
-}
-
-.status-bar {
-  padding: 12px 16px;
-  border: 1px solid #cde9d2;
-  border-radius: 10px;
-  background: #e8f5e9;
-  color: #2e7d32;
-  font-weight: 700;
-  text-align: center;
-}
-
-.empty-message {
-  padding: 20px 0;
-  color: #7f8c8d;
-  text-align: center;
-}
-
-.loading-message {
-  padding: 22px 0;
-  color: #52758c;
-  text-align: center;
-}
-
-.error-banner {
+.hero__controls {
   display: flex;
-  margin-bottom: 14px;
-  padding: 10px 12px;
-  border: 1px solid #f1c5c5;
-  border-radius: 9px;
+  margin-top: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.loading {
+  display: flex;
+  padding: 18px 0;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.loading p {
+  margin: 0;
+}
+
+.error-message {
+  margin-bottom: 12px;
+}
+
+.error-message__row {
+  display: flex;
+  width: 100%;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  background: #fff6f6;
-  color: #b33a3a;
-  font-size: 0.86rem;
 }
 
-.error-banner button {
-  flex: 0 0 auto;
-  padding: 7px 10px;
-  background: #c94a4a;
+.empty {
+  padding: 18px 0;
+  color: var(--px-ink-dim);
+  font-size: 11px;
+  text-align: center;
 }
 
-@media (max-width: 520px) {
-  .page-heading p {
-    font-size: 0.9rem;
+@media (max-width: 960px) {
+  .dashboard {
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  .dashboard-controls {
+  .dashboard__side {
+    position: static;
+  }
+}
+
+@media (max-width: 560px) {
+  .hero__controls {
     align-items: stretch;
     flex-direction: column;
-  }
-
-  .refresh-button {
-    width: 100%;
   }
 }
 </style>

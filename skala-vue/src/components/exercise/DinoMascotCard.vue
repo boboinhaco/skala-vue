@@ -68,12 +68,12 @@ const conditionBadges = computed(() => {
 <style scoped>
 .dino-card {
   display: flex;
-  padding: 20px;
-  border-radius: 18px;
+  padding: 14px;
+  border: var(--px-border) solid var(--px-edge);
   align-items: center;
-  gap: 20px;
-  background: linear-gradient(135deg, rgb(255 255 255 / 92%), rgb(233 245 251 / 92%));
-  box-shadow: 0 10px 28px rgb(30 50 70 / 10%);
+  gap: 16px;
+  background: var(--px-panel-soft);
+  box-shadow: var(--px-shadow-sm);
 }
 
 .dino-card__copy {
@@ -82,37 +82,38 @@ const conditionBadges = computed(() => {
 }
 
 .dino-card__empty {
-  padding: 24px 0;
+  padding: 20px 0;
   width: 100%;
-  color: #7f8c8d;
+  color: var(--px-ink-dim);
+  font-size: 11px;
   text-align: center;
 }
 
 .eyebrow {
   margin: 0;
-  color: #249dd8;
-  font-size: 0.74rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
+  color: var(--px-accent);
+  font-family: var(--px-font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
 }
 
 .dino-card__copy h3 {
   margin: 4px 0 8px;
-  color: #20364b;
-  font-size: 1.3rem;
-  font-weight: 800;
+  font-size: 22px;
 }
 
 .comment {
   margin: 0 0 8px;
-  color: #45607a;
-  line-height: 1.5;
+  color: var(--px-ink);
+  font-size: 14px;
+  line-height: 1.6;
 }
 
 .tip {
   display: block;
-  color: #6f8395;
-  font-size: 0.82rem;
+  color: var(--px-ink-dim);
+  font-size: 11px;
 }
 
 .badges {
@@ -120,26 +121,27 @@ const conditionBadges = computed(() => {
   margin: 12px 0 0;
   padding: 0;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 5px;
   list-style: none;
 }
 
 .badges li {
-  padding: 4px 9px;
-  border-radius: 999px;
-  background: rgb(36 157 216 / 12%);
-  color: #1c6f97;
-  font-size: 0.74rem;
+  padding: 2px 7px;
+  border: 2px solid var(--px-edge);
+  background: #0d1526;
+  color: var(--px-cool);
+  font-family: var(--px-font-display);
+  font-size: 11px;
   font-weight: 700;
 }
 
 .runners-up {
   margin: 10px 0 0;
-  color: #8ba0b2;
-  font-size: 0.78rem;
+  color: var(--px-ink-dim);
+  font-size: 11px;
 }
 
-@media (max-width: 520px) {
+@media (max-width: 560px) {
   .dino-card {
     flex-direction: column;
     text-align: center;

@@ -216,12 +216,12 @@ onMounted(handleRead)
 
 <style scoped>
 .axios-json-practice {
-  margin-top: 24px;
-  padding: 22px;
-  border: 1px solid #dfe7ed;
-  border-radius: 12px;
-  background: #fff;
-  color: #2c3e50;
+  margin-top: 20px;
+  padding: 16px 18px;
+  border: var(--px-border) solid var(--px-edge);
+  background: var(--px-panel-soft);
+  box-shadow: var(--px-shadow-sm);
+  color: var(--px-ink);
 }
 
 .section-heading,
@@ -234,47 +234,29 @@ onMounted(handleRead)
 }
 
 .section-heading {
-  margin-bottom: 16px;
+  margin-bottom: 14px;
   justify-content: space-between;
   gap: 16px;
 }
 
 .eyebrow {
-  color: #249dd8;
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
+  color: var(--px-accent);
+  font-family: var(--px-font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
 }
 
 h2 {
   margin: 4px 0 0;
-  color: #2c3e50;
-  font-size: 1.3rem;
-  font-weight: 800;
-}
-
-button,
-input {
-  font: inherit;
-}
-
-button {
-  border: 0;
-  border-radius: 7px;
-  color: #fff;
-  cursor: pointer;
-  font-size: 0.78rem;
-  font-weight: 800;
-}
-
-button:disabled {
-  cursor: wait;
-  opacity: 0.55;
+  color: var(--px-ink);
+  font-family: var(--px-font-display);
+  font-size: 22px;
+  font-weight: 700;
 }
 
 .reload-button {
-  padding: 8px 11px;
-  background: #607d8b;
+  background: var(--px-panel-soft);
 }
 
 .create-form {
@@ -284,50 +266,41 @@ button:disabled {
 input {
   width: 100%;
   min-width: 0;
-  padding: 10px 12px;
-  border: 1px solid #cfdae2;
-  border-radius: 7px;
-  outline: none;
-  color: #2c3e50;
-}
-
-input:focus {
-  border-color: #249dd8;
-  box-shadow: 0 0 0 3px rgb(36 157 216 / 12%);
 }
 
 .create-button {
   flex: 0 0 auto;
-  padding: 10px 14px;
-  background: #27ae60;
+  background: var(--px-good);
+  color: #05240f;
 }
 
 .api-notice {
-  margin: 10px 0 14px;
-  color: #7d8f9e;
-  font-size: 0.78rem;
+  margin: 10px 0 12px;
+  color: var(--px-ink-dim);
+  font-size: 11px;
 }
 
 .message {
   margin: 10px 0;
   padding: 8px 10px;
-  border-radius: 7px;
-  font-size: 0.82rem;
+  border: 2px solid var(--px-edge);
+  font-size: 11px;
 }
 
 .message.success {
-  background: #edf8f0;
-  color: #287a3c;
+  background: #0e2018;
+  color: #b6e6c6;
 }
 
 .message.error {
-  background: #fff1f1;
-  color: #b23b3b;
+  background: #2a1118;
+  color: #ffc7c7;
 }
 
 .loading-message {
-  padding: 24px 0;
-  color: #718594;
+  padding: 22px 0;
+  color: var(--px-ink-dim);
+  font-size: 11px;
   text-align: center;
 }
 
@@ -338,11 +311,11 @@ input:focus {
 }
 
 .post-item {
-  min-height: 68px;
-  padding: 12px 0;
+  min-height: 62px;
+  padding: 10px 0;
+  border-top: 2px solid var(--px-edge-light);
   justify-content: space-between;
   gap: 16px;
-  border-top: 1px solid #edf1f4;
 }
 
 .post-content {
@@ -355,15 +328,15 @@ input:focus {
 }
 
 .post-content span {
-  color: #97a5b0;
-  font-size: 0.72rem;
+  color: var(--px-ink-dim);
+  font-size: 11px;
 }
 
 .post-content strong {
   overflow: hidden;
-  color: #34495e;
-  font-size: 0.9rem;
-  font-weight: 700;
+  color: var(--px-ink);
+  font-size: 14px;
+  font-weight: 400;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -378,22 +351,19 @@ input:focus {
   width: 100%;
 }
 
-.update-button,
-.delete-button,
-.cancel-button {
-  padding: 7px 10px;
-}
-
 .update-button {
-  background: #f39c12;
+  background: var(--px-accent);
+  color: var(--px-accent-ink);
 }
 
 .delete-button {
-  background: #e74c3c;
+  background: var(--px-bad);
+  color: #2b0d0d;
 }
 
 .cancel-button {
-  background: #8796a1;
+  background: #55617d;
+  color: #0d1220;
 }
 
 @media (max-width: 600px) {

@@ -16,6 +16,7 @@
     "@primeuix/themes": "^3.0.0",
     "axios": "^1.19.0",
     "element-plus": "^2.14.4",
+    "galmuri": "^2.40.3",
     "pinia": "^4.0.2",
     "primeicons": "^8.0.0",
     "primevue": "^5.0.1",

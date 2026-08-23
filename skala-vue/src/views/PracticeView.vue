@@ -341,7 +341,7 @@ const counterStore = useCounterStore()
       <a href="https://www.naver.com" @click.prevent="handleLink">네이버 링크</a>
       <br />
       <h3>2) .stop (이벤트 버블링 막기)</h3>
-      <div @click="handleBox" style="padding: 20px; background-color: #eee">
+      <div class="bubble-box" @click="handleBox">
         <p>부모 영역 (클릭 시 alert 발동)</p>
         <button @click="handleChild1">버블링 발생 버튼</button>
         <button @click.stop="handleChild2">버블링 차단 버튼</button>
@@ -580,39 +580,9 @@ const counterStore = useCounterStore()
   </main>
 </template>
 
-<style scoped>
+<style>
+/* 실습 페이지 픽셀 테마. 모든 규칙이 .practice-container 안으로 한정돼 있어서
+   scoped 없이 불러도 다른 화면에 영향을 주지 않는다.
+   (자식 실습 컴포넌트들까지 스타일이 닿아야 해서 scoped를 뺐다) */
 @import '@/assets/practice.css';
-
-.text-danger {
-  color: red;
-  font-weight: bold;
-}
-
-.bg-dark {
-  background-color: #333;
-  color: white;
-  padding: 15px;
-}
-
-.border-red {
-  border: 3px solid red;
-}
-
-.border-gray {
-  border: 3px solid #ccc;
-}
-
-.box {
-  padding: 10px;
-  margin-top: 5px;
-  color: white;
-  border-radius: 5px;
-  background-color: #3498db;
-}
-
-.title {
-  color: #ff7675;
-  font-weight: bold;
-  font-size: 18px;
-}
 </style>
