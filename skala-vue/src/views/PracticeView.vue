@@ -1,11 +1,14 @@
 <script setup>
 import { ref, reactive, computed, watch, onMounted, onUpdated, onUnmounted } from 'vue'
 import { useCounterStore } from '@/stores/counter'
+import AxiosJson from '@/components/practices/AxiosJson.vue'
+import ElementPlusChallenge from '@/components/practices/ElementPlusChallenge.vue'
 
 let normalCount = 0
 const vueCount = ref(0)
 const welcomeMessage = 'Welcome to Skala-Vue'
-const rawHtmlData = '이 글자는 <span style="color: red; font-weight: bold;">빨간색 굵은 글자 </span>이다.'
+const rawHtmlData =
+  '이 글자는 <span style="color: red; font-weight: bold;">빨간색 굵은 글자 </span>이다.'
 
 const inputValue = ref('')
 const message = ref('')
@@ -83,16 +86,26 @@ const name = ref('홍길동')
 const isActive = ref(true)
 const items = ref(['사과', '배'])
 const user = ref({ name: '이순신', age: 30 })
-const increaseRef = () => { count.value++ }
-const changeUserName = () => { user.value.name = '장보고' }
+const increaseRef = () => {
+  count.value++
+}
+const changeUserName = () => {
+  user.value.name = '장보고'
+}
 
-const userReactive = reactive({ name: '이순신', age: 30, })
-const celebrateReactive = () => { userReactive.age++ }
+const userReactive = reactive({ name: '이순신', age: 30 })
+const celebrateReactive = () => {
+  userReactive.age++
+}
 const items1 = reactive(['사과', '바나나'])
 // const addItem = () => { items1.push(`과일 ${items1.length + 1}`) } -> 배열 길이 때문에 삭제해도 하나 더 생김
 let fruitSeq = 2
-const addItem = () => { items1.push(`과일 ${++fruitSeq}`) }
-const removeItem = (index) => { items1.splice(index, 1) }
+const addItem = () => {
+  items1.push(`과일 ${++fruitSeq}`)
+}
+const removeItem = (index) => {
+  items1.splice(index, 1)
+}
 
 const dummy = ref(0)
 const getMethodResult = () => {
@@ -119,17 +132,24 @@ watch([city, dateType], ([newCity, newDate], [oldCity, oldDate]) => {
   console.log(`🤖 [통합 API 호출] ${newCity}의 ${newDate} 날씨를 불러옵니다...`)
 })
 
-const user1 = ref({ name: '홍길동', age: 20, })
+const user1 = ref({ name: '홍길동', age: 20 })
 const logDeep = ref('아직 반응 없음')
 const logTarget = ref('아직 반응 없음')
 //객체 내부 어디든 바뀌면 알 수 있음
-watch(user1, (newVal) => {
-  logDeep.value = `[deep 감지] 누군가 변경됨! 현재 이름: ${newVal.name}, 나이: ${newVal.age}`
-}, { deep: true },)
+watch(
+  user1,
+  (newVal) => {
+    logDeep.value = `[deep 감지] 누군가 변경됨! 현재 이름: ${newVal.name}, 나이: ${newVal.age}`
+  },
+  { deep: true },
+)
 //객체의 특정 값만 감시 가능(새 값까지 알 수 있음)
-watch(() => user1.value.age, (newAge, oldAge) => {
-  logTarget.value = `[타겟 감지] 나이가 ${oldAge}세 ➡️ ${newAge}세로 변경됨!`
-},)
+watch(
+  () => user1.value.age,
+  (newAge, oldAge) => {
+    logTarget.value = `[타겟 감지] 나이가 ${oldAge}세 ➡️ ${newAge}세로 변경됨!`
+  },
+)
 
 let timerId = null
 //생성
@@ -143,7 +163,9 @@ onMounted(() => {
 })
 //갱신
 onUpdated(() => {
-  console.log (`3. [onUpdated] 데이터가 변경되어 화면을 새로 그렸습니다. (현재 count: ${count.value})`)
+  console.log(
+    `3. [onUpdated] 데이터가 변경되어 화면을 새로 그렸습니다. (현재 count: ${count.value})`,
+  )
 })
 //소멸
 onUnmounted(() => {
@@ -173,7 +195,7 @@ const counterStore = useCounterStore()
 
     <div class="practice-section">
       <h2>v-html 디렉티브 학습</h2>
-      <h3>일반 보간법 {{ }} 사용 결과:</h3>
+      <h3>일반 보간법 {{}} 사용 결과:</h3>
       <p>{{ rawHtmlData }}</p>
       <br />
       <h3>v-html 디렉티브 사용 결과:</h3>
@@ -189,7 +211,7 @@ const counterStore = useCounterStore()
 
     <div class="practice-section">
       <h2>v-text 디렉티브 학습</h2>
-      <h3>1) 일반 보간법 {{ }} 결과: </h3>
+      <h3>1) 일반 보간법 {{}} 결과:</h3>
       <p>출력: {{ content }}</p>
       <br />
 
@@ -225,14 +247,18 @@ const counterStore = useCounterStore()
       <br />
 
       <h3>클래스 바인딩 (배열 형식)</h3>
-      <div :class="[themeClass, isWarning ? 'border-red' : 'border-gray']">다중 클래스가 조립된 박스 구역입니다.</div>
+      <div :class="[themeClass, isWarning ? 'border-red' : 'border-gray']">
+        다중 클래스가 조립된 박스 구역입니다.
+      </div>
     </div>
 
     <div class="practice-section">
       <h2>v-bind 디렉티브 고급 (스타일 바인딩)</h2>
       <h3>1) 인라인 스타일 변수 조작 (객체 형식)</h3>
       <p :style="{ color: textColor, fontWeight: 'bold' }">이 글자의 색상은 실시간으로 바뀝니다.</p>
-      <button @click="textColor = textColor === 'purple' ? 'blue' : 'purple'">글자 색상 토글</button>
+      <button @click="textColor = textColor === 'purple' ? 'blue' : 'purple'">
+        글자 색상 토글
+      </button>
       <br />
 
       <h3>2) 다중 스타일 객체 조립 (배열 형식)</h3>
@@ -241,7 +267,9 @@ const counterStore = useCounterStore()
       <br />
 
       <div :style="[baseBoxStyle, { width: boxWidth + 'px' }]">
-        <p style="color: white; padding: 10px; text-align: center">가로 크기: {{ boxWidth }}px 박스</p>
+        <p style="color: white; padding: 10px; text-align: center">
+          가로 크기: {{ boxWidth }}px 박스
+        </p>
       </div>
     </div>
 
@@ -267,15 +295,19 @@ const counterStore = useCounterStore()
       <input type="number" v-model="score" min="0" max="100" step="5" />
       <br />
 
-      <div v-if="score >= 90" style="color: green; font-weight: bold">합격등급: A 학점 (훌륭합니다!)</div>
+      <div v-if="score >= 90" style="color: green; font-weight: bold">
+        합격등급: A 학점 (훌륭합니다!)
+      </div>
       <div v-else-if="score >= 80" style="color: blue">합격등급: B 학점 (양호합니다.)</div>
-      <div v-else-if="score >= 70" style="color: orange">합격등급: C 학점 (조금 더 분발하세요.)</div>
+      <div v-else-if="score >= 70" style="color: orange">
+        합격등급: C 학점 (조금 더 분발하세요.)
+      </div>
       <div v-else style="color: red; font-weight: bold">합격등급: F 학점 (재시험 대상입니다.)</div>
     </div>
 
     <div class="practice-section">
       <h2>v-show 디렉티브 학습</h2>
-      <button @click="inVisible = !inVisible">화면 토글하기 </button>
+      <button @click="inVisible = !inVisible">화면 토글하기</button>
       <br />
 
       <div v-show="inVisible" class="box">
@@ -320,10 +352,19 @@ const counterStore = useCounterStore()
       <h2>v-model 양방향 데이터 바인딩</h2>
       <h3>1) v-model 축약 문법 (양방향)</h3>
       <input type="text" v-model="text1" placeholder="여기에 입력하세요" />
-      <p>입력된 값: <strong>{{ text1 }}</strong></p>
+      <p>
+        입력된 값: <strong>{{ text1 }}</strong>
+      </p>
       <h3>2) y-model의 내부 작동 원리 (단방향 + 이벤트)</h3>
-      <input type="text" :value="text2" @input="(e) => (text2 = e.target.value)" placeholder="원리파악용 입력창" />
-      <p>입력된 값: <strong>{{ text2 }}</strong></p>
+      <input
+        type="text"
+        :value="text2"
+        @input="(e) => (text2 = e.target.value)"
+        placeholder="원리파악용 입력창"
+      />
+      <p>
+        입력된 값: <strong>{{ text2 }}</strong>
+      </p>
     </div>
 
     <div class="practice-section">
@@ -331,25 +372,34 @@ const counterStore = useCounterStore()
       <div>
         <h3>1) Textarea (장문 텍스트)</h3>
         <textarea v-model="comment" placeholder="의견을 남겨주세요"></textarea>
-        <p>데이터 상태 : <span>{{ comment }}</span></p>
+        <p>
+          데이터 상태 : <span>{{ comment }}</span>
+        </p>
       </div>
       <div>
         <h3>2) 단일 Checkbox (동의여부)</h3>
         <label> <input type="checkbox" v-model="isAgreed" /> 약관에 동의합니다. </label>
-        <p>데이터 상태 : <span>{{ isAgreed }}</span></p>
+        <p>
+          데이터 상태 : <span>{{ isAgreed }}</span>
+        </p>
       </div>
       <div>
         <h3>3) 다중 Checkbox (복수선택 -> 배열에 저장)</h3>
         <label><input type="checkbox" value="사과" v-model="favoriteFruits" /> 사과</label> &nbsp;
-        <label><input type="checkbox" value="바나나" v-model="favoriteFruits" /> 바나나</label> &nbsp;
+        <label><input type="checkbox" value="바나나" v-model="favoriteFruits" /> 바나나</label>
+        &nbsp;
         <label><input type="checkbox" value="딸기" v-model="favoriteFruits" /> 딸기</label> &nbsp;
-        <p>데이터 상태 (배열): <span>{{ favoriteFruits }}</span></p>
+        <p>
+          데이터 상태 (배열): <span>{{ favoriteFruits }}</span>
+        </p>
       </div>
       <div>
         <h3>4) Radio (단일선택)</h3>
         <label><input type="radio" value="남성" v-model="gender" /> 남성</label> &nbsp;
         <label><input type="radio" value="여성" v-model="gender" /> 여성</label>
-        <p>데이터 상태 : <span>{{ gender }}</span></p>
+        <p>
+          데이터 상태 : <span>{{ gender }}</span>
+        </p>
       </div>
       <div>
         <h3>5) Select (드롭다운 선택)</h3>
@@ -359,7 +409,9 @@ const counterStore = useCounterStore()
           <option value="hundai">현대</option>
           <option value="bmw">BMW</option>
         </select>
-        <p>데이터 상태 : <span>{{ selectedCar }}</span></p>
+        <p>
+          데이터 상태 : <span>{{ selectedCar }}</span>
+        </p>
       </div>
     </div>
 
@@ -368,24 +420,46 @@ const counterStore = useCounterStore()
       <section style="margin-bottom: 20px">
         <h3>1) .lazy 수식어 (change 이벤트 시점 반영)</h3>
         <input type="text" v-model.lazy="lazyText" placeholder="입력 후 Enter 또는 외부 클릭" />
-        <p>실시간이 아닌 확정된 값: <strong>{{ lazyText }}</strong></p>
+        <p>
+          실시간이 아닌 확정된 값: <strong>{{ lazyText }}</strong>
+        </p>
       </section>
       <section style="margin-bottom: 20px">
         <h3>2) .number 수식어 (Number 타입 자동 형변환)</h3>
         <input type="text" v-model.number="age" placeholder="나이를 입력하세요" />
-        <p>입력된 값: <strong>{{ age }}</strong></p>
-        <p>데이터타입: <strong>{{ typeof age }}</strong></p>
+        <p>
+          입력된 값: <strong>{{ age }}</strong>
+        </p>
+        <p>
+          데이터타입: <strong>{{ typeof age }}</strong>
+        </p>
       </section>
       <section>
         <h3>3) .trim 수식어 (양끝 공백 자동 제거)</h3>
-        <input type="text" v-model.trim="userEmail" placeholder="앞뒤 공백을 포함해 입력해 보세요" />
-        <p>공백 제거된 값: <strong>"{{ userEmail }}"</strong></p>
-        <p>문자열 길이: <strong>{{ userEmail.length }}</strong></p>
+        <input
+          type="text"
+          v-model.trim="userEmail"
+          placeholder="앞뒤 공백을 포함해 입력해 보세요"
+        />
+        <p>
+          공백 제거된 값: <strong>"{{ userEmail }}"</strong>
+        </p>
+        <p>
+          문자열 길이: <strong>{{ userEmail.length }}</strong>
+        </p>
       </section>
       <section>
         <h3>4) Chaining (수식어 체이닝: .trim.number)</h3>
-        <p><input type="text" v-model.trim.number="price" placeholder="공백과 숫자를 섞어 입력해 보세요" /></p>
-        <p>데이터 타입: <strong>{{ typeof price }}</strong></p>
+        <p>
+          <input
+            type="text"
+            v-model.trim.number="price"
+            placeholder="공백과 숫자를 섞어 입력해 보세요"
+          />
+        </p>
+        <p>
+          데이터 타입: <strong>{{ typeof price }}</strong>
+        </p>
       </section>
     </div>
 
@@ -397,7 +471,9 @@ const counterStore = useCounterStore()
 
     <div class="practice-section">
       <h2>반응형 상태 ref() 기초</h2>
-      <p>Ref 카운트: <strong>{{ count }}</strong></p>
+      <p>
+        Ref 카운트: <strong>{{ count }}</strong>
+      </p>
       <p>이름: <input v-model="name" />{{ name }}</p>
       <p>활성 상태: {{ isActive ? '활성' : '비활성' }}</p>
       <p>과일 목록: {{ items.join(', ') }}</p>
@@ -417,7 +493,9 @@ const counterStore = useCounterStore()
       <ul>
         <li v-for="(item, index) in items1" :key="index">
           {{ item }}
-          <button @click="removeItem(index)" style="margin-left: 8px; padding: 2px 6px">삭제</button>
+          <button @click="removeItem(index)" style="margin-left: 8px; padding: 2px 6px">
+            삭제
+          </button>
         </li>
       </ul>
       <button @click="addItem">과일 항목 추가</button>
@@ -437,14 +515,11 @@ const counterStore = useCounterStore()
       <h2>감시자 watch()의 원리와 실무 활용</h2>
       <h3>지역 선택 제어판</h3>
       <p>현재 선택된 도시: {{ currentCity }}</p>
-      <button @click="currentCity =
-        '서울'">서울 선택</button> &nbsp;
-      <button @click="currentCity =
-        '수원'">수원 선택</button> &nbsp;
-      <button @click="currentCity =
-        '부산'">부산 선택</button>
+      <button @click="currentCity = '서울'">서울 선택</button> &nbsp;
+      <button @click="currentCity = '수원'">수원 선택</button> &nbsp;
+      <button @click="currentCity = '부산'">부산 선택</button>
       <div class="monitor">
-        <h3>👁️ 파수꾼(watch) 모니터링 시스템 👁️ </h3>
+        <h3>👁️ 파수꾼(watch) 모니터링 시스템 👁️</h3>
         <p>{{ logMessage }}</p>
         <small style="color: gray">(버튼을 누른 후 브라우저 콘솔창 F12를 확인해 보세요)</small>
       </div>
@@ -458,7 +533,8 @@ const counterStore = useCounterStore()
         <option value="서울">서울</option>
         <option value="수원">수원</option>
         <option value="부산">부산</option>
-      </select> &nbsp;
+      </select>
+      &nbsp;
       <label>날짜: </label>
       <label><input type="radio" value="오늘" v-model="dateType" /> 오늘</label> &nbsp;
       <label><input type="radio" value="내일" v-model="dateType" /> 내일</label> &nbsp;
@@ -473,8 +549,7 @@ const counterStore = useCounterStore()
       <h2>ref 객체/배열 감시</h2>
       <h3>회원 데이터 조작 panel</h3>
       <p>이름: {{ user1.name }} / 나이: {{ user1.age }}세</p>
-      <button @click="user1.name =
-        '이순신'">이름만 변경</button> &nbsp;
+      <button @click="user1.name = '이순신'">이름만 변경</button> &nbsp;
       <button @click="user1.age++">나이만 변경 (age++)</button>
       <div class="monitor">
         <p>1) deep: true 모니터 (전체 감시)</p>
@@ -500,6 +575,8 @@ const counterStore = useCounterStore()
       <button type="button" @click="counterStore.increment">숫자 1 증가</button>
     </section>
 
+    <AxiosJson />
+    <ElementPlusChallenge />
   </main>
 </template>
 

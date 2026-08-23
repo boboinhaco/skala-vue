@@ -1,0 +1,620 @@
+{
+  "version": 1,
+  "note": "weatherCodes는 Open-Meteo WMO 코드 기준. tempRange는 섭씨.",
+  "wmoGroups": {
+    "clear": [0, 1],
+    "cloudy": [2, 3],
+    "fog": [45, 48],
+    "drizzle": [51, 53, 55, 56, 57],
+    "rain": [61, 63, 65, 66, 67],
+    "snow": [71, 73, 75, 77, 85, 86],
+    "shower": [80, 81, 82],
+    "thunder": [95, 96, 99]
+  },
+  "dinos": [
+    {
+      "id": "spinosaurus",
+      "name": "스피노사우루스",
+      "nameEn": "Spinosaurus",
+      "era": "백악기",
+      "mya": [99, 93],
+      "diet": "육식",
+      "length": "15m",
+      "isDinosaur": true,
+      "accent": "#2E6F8E",
+      "match": {
+        "tempRange": [20, 38],
+        "humidity": "high",
+        "weatherCodes": [61, 63, 65, 66, 67, 80, 81, 82],
+        "priority": 3
+      },
+      "comment": "물가 체질이라 비 오는 날 컨디션 최고",
+      "fact": "등에 돛처럼 솟은 뼈 구조가 있고, 알려진 육식공룡 중 가장 크다",
+      "tip": "우산 꼭 챙기세요. 오늘은 물가가 주인공입니다"
+    },
+    {
+      "id": "baryonyx",
+      "name": "바리오닉스",
+      "nameEn": "Baryonyx",
+      "era": "백악기",
+      "mya": [130, 125],
+      "diet": "육식",
+      "length": "9m",
+      "isDinosaur": true,
+      "accent": "#3B7D6E",
+      "match": {
+        "tempRange": [14, 28],
+        "humidity": "high",
+        "weatherCodes": [51, 53, 55, 61, 63, 80, 81],
+        "priority": 2
+      },
+      "comment": "낚시하기 딱 좋은 날씨라며 강가로 나섰습니다",
+      "fact": "위장 화석에서 물고기 비늘이 나와 어식성이 확인된 공룡",
+      "tip": "가랑비 정도는 각오하세요"
+    },
+    {
+      "id": "suchomimus",
+      "name": "수코미무스",
+      "nameEn": "Suchomimus",
+      "era": "백악기",
+      "mya": [125, 112],
+      "diet": "육식",
+      "length": "11m",
+      "isDinosaur": true,
+      "accent": "#4A7C8C",
+      "match": {
+        "tempRange": [22, 34],
+        "humidity": "high",
+        "weatherCodes": [61, 63, 80, 81, 95],
+        "priority": 1
+      },
+      "comment": "악어 같은 주둥이로 빗물을 그대로 받아먹는 중",
+      "fact": "이름 자체가 '악어를 닮은 것'이라는 뜻",
+      "tip": "습도 높습니다. 통풍 되는 옷 추천"
+    },
+    {
+      "id": "parasaurolophus",
+      "name": "파라사우롤로푸스",
+      "nameEn": "Parasaurolophus",
+      "era": "백악기",
+      "mya": [76, 73],
+      "diet": "초식",
+      "length": "10m",
+      "isDinosaur": true,
+      "accent": "#7A6BA8",
+      "match": {
+        "tempRange": [16, 28],
+        "humidity": "high",
+        "weatherCodes": [45, 48, 51, 53, 61],
+        "priority": 2
+      },
+      "comment": "습한 공기에 볏 소리가 유난히 잘 울린다고 합니다",
+      "fact": "머리 뒤 긴 볏이 속이 빈 관 구조라 나팔처럼 소리를 냈을 것으로 추정",
+      "tip": "안개나 이슬비 가능성 있어요"
+    },
+    {
+      "id": "tyrannosaurus",
+      "name": "티라노사우루스",
+      "nameEn": "Tyrannosaurus rex",
+      "era": "백악기",
+      "mya": [68, 66],
+      "diet": "육식",
+      "length": "12m",
+      "isDinosaur": true,
+      "accent": "#B5532F",
+      "match": {
+        "tempRange": [18, 30],
+        "humidity": "mid",
+        "weatherCodes": [0, 1, 2],
+        "priority": 3
+      },
+      "comment": "날씨가 좋아서 그런지 오늘따라 자신감이 넘칩니다",
+      "fact": "무는 힘이 육상 동물 중 역대 최강급으로 추정된다",
+      "tip": "야외 활동하기 좋은 날이에요"
+    },
+    {
+      "id": "triceratops",
+      "name": "트리케라톱스",
+      "nameEn": "Triceratops",
+      "era": "백악기",
+      "mya": [68, 66],
+      "diet": "초식",
+      "length": "9m",
+      "isDinosaur": true,
+      "accent": "#8A9B4A",
+      "match": {
+        "tempRange": [15, 26],
+        "humidity": "mid",
+        "weatherCodes": [1, 2, 3],
+        "priority": 2
+      },
+      "comment": "적당히 선선해서 하루 종일 풀 뜯기 좋은 날",
+      "fact": "목을 덮는 커다란 프릴은 방어용이자 과시용이었을 가능성이 크다",
+      "tip": "겉옷 하나 걸치면 딱 좋아요"
+    },
+    {
+      "id": "stegosaurus",
+      "name": "스테고사우루스",
+      "nameEn": "Stegosaurus",
+      "era": "쥐라기",
+      "mya": [155, 145],
+      "diet": "초식",
+      "length": "9m",
+      "isDinosaur": true,
+      "accent": "#5E8C5A",
+      "match": {
+        "tempRange": [20, 32],
+        "humidity": "low",
+        "weatherCodes": [0, 1],
+        "priority": 2
+      },
+      "comment": "등판 골판으로 열을 식히는 중, 오늘은 풀가동입니다",
+      "fact": "등의 골판이 체온 조절에 쓰였다는 가설이 오래 논의되어 왔다",
+      "tip": "햇볕 강해요. 자외선 차단제 챙기세요"
+    },
+    {
+      "id": "allosaurus",
+      "name": "알로사우루스",
+      "nameEn": "Allosaurus",
+      "era": "쥐라기",
+      "mya": [155, 145],
+      "diet": "육식",
+      "length": "9m",
+      "isDinosaur": true,
+      "accent": "#C0703A",
+      "match": {
+        "tempRange": [22, 34],
+        "humidity": "low",
+        "weatherCodes": [0, 1, 2],
+        "priority": 1
+      },
+      "comment": "건조하고 맑은 날, 사냥 나가기 딱 좋다고 하네요",
+      "fact": "쥐라기 후기 북아메리카에서 가장 흔했던 대형 육식공룡",
+      "tip": "물 자주 마시세요"
+    },
+    {
+      "id": "brachiosaurus",
+      "name": "브라키오사우루스",
+      "nameEn": "Brachiosaurus",
+      "era": "쥐라기",
+      "mya": [154, 150],
+      "diet": "초식",
+      "length": "22m",
+      "isDinosaur": true,
+      "accent": "#9B7B4F",
+      "match": {
+        "tempRange": [30, 45],
+        "humidity": "mid",
+        "weatherCodes": [0, 1],
+        "priority": 3
+      },
+      "comment": "너무 더워서 높은 나뭇잎만 뜯으며 그늘을 찾는 중",
+      "fact": "앞다리가 뒷다리보다 길어 몸이 기린처럼 앞으로 솟은 형태",
+      "tip": "폭염입니다. 한낮 외출은 피하세요"
+    },
+    {
+      "id": "argentinosaurus",
+      "name": "아르헨티노사우루스",
+      "nameEn": "Argentinosaurus",
+      "era": "백악기",
+      "mya": [96, 92],
+      "diet": "초식",
+      "length": "35m",
+      "isDinosaur": true,
+      "accent": "#8C7A5B",
+      "match": {
+        "tempRange": [28, 42],
+        "humidity": "high",
+        "weatherCodes": [0, 1, 2],
+        "priority": 2
+      },
+      "comment": "덩치가 커서 열이 안 빠진다며 축 늘어져 있습니다",
+      "fact": "지금까지 알려진 육상 동물 중 가장 무거운 축에 드는 용각류",
+      "tip": "무덥습니다. 실내가 안전해요"
+    },
+    {
+      "id": "giganotosaurus",
+      "name": "기가노토사우루스",
+      "nameEn": "Giganotosaurus",
+      "era": "백악기",
+      "mya": [99, 95],
+      "diet": "육식",
+      "length": "13m",
+      "isDinosaur": true,
+      "accent": "#A8503C",
+      "match": {
+        "tempRange": [26, 38],
+        "humidity": "mid",
+        "weatherCodes": [0, 1, 2],
+        "priority": 1
+      },
+      "comment": "남반구 더위엔 익숙하다며 여유를 부리고 있습니다",
+      "fact": "티라노사우루스와 비슷하거나 더 긴 몸길이로 추정되는 남아메리카의 대형 수각류",
+      "tip": "그늘 위주로 다니세요"
+    },
+    {
+      "id": "carnotaurus",
+      "name": "카르노타우루스",
+      "nameEn": "Carnotaurus",
+      "era": "백악기",
+      "mya": [72, 69],
+      "diet": "육식",
+      "length": "8m",
+      "isDinosaur": true,
+      "accent": "#B24A4A",
+      "match": {
+        "tempRange": [24, 36],
+        "humidity": "low",
+        "weatherCodes": [0, 1],
+        "priority": 1
+      },
+      "comment": "건조한 날엔 전력질주하기 좋다며 신났습니다",
+      "fact": "눈 위에 소뿔 같은 돌기가 있고 앞다리가 극단적으로 짧다",
+      "tip": "건조해요. 수분 보충 잊지 마세요"
+    },
+    {
+      "id": "yutyrannus",
+      "name": "유티라누스",
+      "nameEn": "Yutyrannus",
+      "era": "백악기",
+      "mya": [125, 122],
+      "diet": "육식",
+      "length": "9m",
+      "isDinosaur": true,
+      "accent": "#6B7F99",
+      "match": {
+        "tempRange": [-10, 8],
+        "humidity": "mid",
+        "weatherCodes": [1, 2, 3, 71, 73],
+        "priority": 3
+      },
+      "comment": "깃털 덕분에 이 정도 추위는 버틸 만하다고 합니다",
+      "fact": "깃털 흔적이 발견된 대형 수각류로, 서늘한 환경에 살았던 것으로 추정",
+      "tip": "패딩 꺼낼 때입니다"
+    },
+    {
+      "id": "cryolophosaurus",
+      "name": "크리올로포사우루스",
+      "nameEn": "Cryolophosaurus",
+      "era": "쥐라기",
+      "mya": [194, 188],
+      "diet": "육식",
+      "length": "7m",
+      "isDinosaur": true,
+      "accent": "#5A88A8",
+      "match": {
+        "tempRange": [-20, 2],
+        "humidity": "low",
+        "weatherCodes": [71, 73, 75, 77, 85, 86],
+        "priority": 3
+      },
+      "comment": "남극 출신이라 눈 오는 날이 제일 편하다네요",
+      "fact": "남극 대륙에서 발견된 대형 수각류이며 머리 위에 독특한 볏이 있다",
+      "tip": "눈 예보 있어요. 미끄럼 조심"
+    },
+    {
+      "id": "nanuqsaurus",
+      "name": "나누크사우루스",
+      "nameEn": "Nanuqsaurus",
+      "era": "백악기",
+      "mya": [70, 68],
+      "diet": "육식",
+      "length": "6m",
+      "isDinosaur": true,
+      "accent": "#7C9CB5",
+      "match": {
+        "tempRange": [-15, 4],
+        "humidity": "mid",
+        "weatherCodes": [71, 73, 75, 85, 86],
+        "priority": 2
+      },
+      "comment": "북극권 출신답게 눈밭을 아무렇지 않게 걷습니다",
+      "fact": "알래스카 고위도 지역에서 발견된 티라노사우루스류",
+      "tip": "체감온도 낮아요. 목도리 챙기세요"
+    },
+    {
+      "id": "pachyrhinosaurus",
+      "name": "파키리노사우루스",
+      "nameEn": "Pachyrhinosaurus",
+      "era": "백악기",
+      "mya": [73, 69],
+      "diet": "초식",
+      "length": "7m",
+      "isDinosaur": true,
+      "accent": "#8899A6",
+      "match": {
+        "tempRange": [-8, 6],
+        "humidity": "mid",
+        "weatherCodes": [2, 3, 71, 73],
+        "priority": 1
+      },
+      "comment": "무리 지어 다니며 추위를 견디는 중",
+      "fact": "뿔 대신 코 위에 두꺼운 뼈 덩어리가 있는 각룡류",
+      "tip": "쌀쌀합니다. 겹쳐 입으세요"
+    },
+    {
+      "id": "troodon",
+      "name": "트로오돈",
+      "nameEn": "Troodon",
+      "era": "백악기",
+      "mya": [77, 76],
+      "diet": "잡식",
+      "length": "2.4m",
+      "isDinosaur": true,
+      "accent": "#6E7BA0",
+      "match": {
+        "tempRange": [-5, 10],
+        "humidity": "mid",
+        "weatherCodes": [3, 45, 48],
+        "priority": 2
+      },
+      "comment": "해가 짧은 날엔 큰 눈이 제 역할을 한다고 합니다",
+      "fact": "몸 크기 대비 뇌가 큰 편이었고 눈도 커서 어두운 환경에 적응했을 것으로 추정",
+      "tip": "흐리고 어둑해요. 조명 밝은 곳에서 활동하세요"
+    },
+    {
+      "id": "velociraptor",
+      "name": "벨로키랍토르",
+      "nameEn": "Velociraptor",
+      "era": "백악기",
+      "mya": [75, 71],
+      "diet": "육식",
+      "length": "2m",
+      "isDinosaur": true,
+      "accent": "#A5895C",
+      "match": {
+        "tempRange": [10, 30],
+        "humidity": "low",
+        "weatherCodes": [0, 1, 2],
+        "priority": 2,
+        "windMin": 25
+      },
+      "comment": "바람 부는 건조한 날, 모래 헤치며 달리기 좋답니다",
+      "fact": "실제 크기는 칠면조 정도였고 온몸이 깃털로 덮여 있었다",
+      "tip": "바람 강해요. 모자 날아갑니다"
+    },
+    {
+      "id": "protoceratops",
+      "name": "프로토케라톱스",
+      "nameEn": "Protoceratops",
+      "era": "백악기",
+      "mya": [75, 71],
+      "diet": "초식",
+      "length": "2m",
+      "isDinosaur": true,
+      "accent": "#B39A6B",
+      "match": {
+        "tempRange": [12, 32],
+        "humidity": "low",
+        "weatherCodes": [0, 1, 2, 3],
+        "priority": 1,
+        "windMin": 30
+      },
+      "comment": "모래바람이 심해 몸을 웅크리고 버티는 중",
+      "fact": "벨로키랍토르와 싸우던 자세 그대로 묻힌 '격투 화석'으로 유명하다",
+      "tip": "미세먼지·모래바람 주의하세요"
+    },
+    {
+      "id": "oviraptor",
+      "name": "오비랍토르",
+      "nameEn": "Oviraptor",
+      "era": "백악기",
+      "mya": [75, 71],
+      "diet": "잡식",
+      "length": "1.6m",
+      "isDinosaur": true,
+      "accent": "#C2A15E",
+      "match": {
+        "tempRange": [14, 30],
+        "humidity": "low",
+        "weatherCodes": [0, 1, 2],
+        "priority": 1
+      },
+      "comment": "둥지 위에 앉아 알을 지키며 하루를 보냅니다",
+      "fact": "알 도둑이라는 이름과 달리, 실은 자기 알을 품고 있던 것으로 밝혀졌다",
+      "tip": "무난한 날씨예요. 계획대로 하세요"
+    },
+    {
+      "id": "microraptor",
+      "name": "미크로랍토르",
+      "nameEn": "Microraptor",
+      "era": "백악기",
+      "mya": [125, 120],
+      "diet": "육식",
+      "length": "0.8m",
+      "isDinosaur": true,
+      "accent": "#5D6470",
+      "match": {
+        "tempRange": [8, 24],
+        "humidity": "high",
+        "weatherCodes": [45, 48, 3],
+        "priority": 3
+      },
+      "comment": "안개 낀 숲을 소리 없이 활공하고 있습니다",
+      "fact": "앞다리와 뒷다리 모두에 날개깃이 있는 네 날개 공룡",
+      "tip": "안개 있어요. 운전 조심하세요"
+    },
+    {
+      "id": "ankylosaurus",
+      "name": "안킬로사우루스",
+      "nameEn": "Ankylosaurus",
+      "era": "백악기",
+      "mya": [68, 66],
+      "diet": "초식",
+      "length": "8m",
+      "isDinosaur": true,
+      "accent": "#6F7A5E",
+      "match": {
+        "tempRange": [8, 22],
+        "humidity": "mid",
+        "weatherCodes": [2, 3],
+        "priority": 2
+      },
+      "comment": "흐린 날엔 갑옷 덕분에 딱히 신경 쓸 게 없다고 합니다",
+      "fact": "온몸이 골질 판으로 덮여 있고 꼬리 끝에 곤봉 같은 뼈뭉치가 달려 있다",
+      "tip": "흐리지만 비는 안 와요"
+    },
+    {
+      "id": "iguanodon",
+      "name": "이구아노돈",
+      "nameEn": "Iguanodon",
+      "era": "백악기",
+      "mya": [126, 122],
+      "diet": "초식",
+      "length": "10m",
+      "isDinosaur": true,
+      "accent": "#7E8F6B",
+      "match": {
+        "tempRange": [12, 24],
+        "humidity": "mid",
+        "weatherCodes": [1, 2, 3],
+        "priority": 1
+      },
+      "comment": "특별할 것 없는 평온한 하루를 보내는 중",
+      "fact": "가장 이른 시기에 학문적으로 기재된 공룡 중 하나이며 엄지에 뾰족한 가시가 있다",
+      "tip": "무난해요. 뭘 입어도 괜찮습니다"
+    },
+    {
+      "id": "maiasaura",
+      "name": "마이아사우라",
+      "nameEn": "Maiasaura",
+      "era": "백악기",
+      "mya": [80, 75],
+      "diet": "초식",
+      "length": "9m",
+      "isDinosaur": true,
+      "accent": "#A2846A",
+      "match": {
+        "tempRange": [14, 26],
+        "humidity": "mid",
+        "weatherCodes": [0, 1, 2],
+        "priority": 1
+      },
+      "comment": "새끼들 데리고 산책하기 좋은 날씨네요",
+      "fact": "둥지와 새끼 화석이 함께 발견되어 육아 행동의 근거로 자주 인용된다",
+      "tip": "나들이 가기 좋은 날이에요"
+    },
+    {
+      "id": "diplodocus",
+      "name": "디플로도쿠스",
+      "nameEn": "Diplodocus",
+      "era": "쥐라기",
+      "mya": [154, 150],
+      "diet": "초식",
+      "length": "26m",
+      "isDinosaur": true,
+      "accent": "#93835F",
+      "match": {
+        "tempRange": [18, 30],
+        "humidity": "low",
+        "weatherCodes": [0, 1],
+        "priority": 1
+      },
+      "comment": "긴 꼬리를 채찍처럼 휘두르며 맑은 하늘을 즐기는 중",
+      "fact": "몸길이의 상당 부분이 목과 꼬리이며, 꼬리 끝이 채찍처럼 가늘다",
+      "tip": "화창해요. 빨래하기 좋은 날"
+    },
+    {
+      "id": "apatosaurus",
+      "name": "아파토사우루스",
+      "nameEn": "Apatosaurus",
+      "era": "쥐라기",
+      "mya": [152, 151],
+      "diet": "초식",
+      "length": "23m",
+      "isDinosaur": true,
+      "accent": "#8B7B63",
+      "match": {
+        "tempRange": [16, 28],
+        "humidity": "mid",
+        "weatherCodes": [1, 2, 3],
+        "priority": 1
+      },
+      "comment": "느긋하게 걸으며 오늘도 평소와 같은 하루",
+      "fact": "한때 브론토사우루스라는 이름으로 더 널리 알려졌던 대형 용각류",
+      "tip": "특별한 준비 없이 나가도 돼요"
+    },
+    {
+      "id": "therizinosaurus",
+      "name": "테리지노사우루스",
+      "nameEn": "Therizinosaurus",
+      "era": "백악기",
+      "mya": [70, 68],
+      "diet": "초식",
+      "length": "10m",
+      "isDinosaur": true,
+      "accent": "#7A6E8C",
+      "match": {
+        "tempRange": [10, 24],
+        "humidity": "mid",
+        "weatherCodes": [2, 3, 51, 53],
+        "priority": 1
+      },
+      "comment": "긴 발톱으로 나뭇가지를 끌어당기며 흐린 하루를 보냅니다",
+      "fact": "길이 50cm가 넘는 거대한 앞발톱을 가진 초식성 수각류",
+      "tip": "우산까진 아니어도 겉옷은 챙기세요"
+    },
+    {
+      "id": "pteranodon",
+      "name": "프테라노돈",
+      "nameEn": "Pteranodon",
+      "era": "백악기",
+      "mya": [86, 84],
+      "diet": "육식",
+      "length": "날개폭 6m",
+      "isDinosaur": false,
+      "accent": "#5F7E93",
+      "match": {
+        "tempRange": [10, 28],
+        "humidity": "mid",
+        "weatherCodes": [0, 1, 2],
+        "priority": 2,
+        "windMin": 20
+      },
+      "comment": "바람 타고 해안을 활공하기 좋은 날이라며 이륙했습니다",
+      "fact": "사실 공룡이 아니라 익룡이며, 이빨이 없는 부리를 가졌다",
+      "tip": "바람 있어요. 가벼운 옷은 조심"
+    },
+    {
+      "id": "quetzalcoatlus",
+      "name": "케찰코아틀루스",
+      "nameEn": "Quetzalcoatlus",
+      "era": "백악기",
+      "mya": [68, 66],
+      "diet": "육식",
+      "length": "날개폭 11m",
+      "isDinosaur": false,
+      "accent": "#6C7F8E",
+      "match": {
+        "tempRange": [14, 32],
+        "humidity": "low",
+        "weatherCodes": [0, 1],
+        "priority": 2,
+        "windMin": 35
+      },
+      "comment": "강풍을 상승기류 삼아 하늘 높이 올라갔습니다",
+      "fact": "기린만 한 키에 날개폭이 10m를 넘는, 역대 최대급 비행 동물",
+      "tip": "강풍주의보 수준이에요. 간판 조심"
+    },
+    {
+      "id": "mosasaurus",
+      "name": "모사사우루스",
+      "nameEn": "Mosasaurus",
+      "era": "백악기",
+      "mya": [70, 66],
+      "diet": "육식",
+      "length": "17m",
+      "isDinosaur": false,
+      "accent": "#2F5F7A",
+      "match": {
+        "tempRange": [16, 32],
+        "humidity": "high",
+        "weatherCodes": [65, 67, 82, 95, 96, 99],
+        "priority": 3
+      },
+      "comment": "폭우가 쏟아지자 오히려 신이 나서 물살을 가릅니다",
+      "fact": "공룡이 아니라 바다에 적응한 대형 해양 파충류",
+      "tip": "폭우·천둥 예보입니다. 외출은 미루세요"
+    }
+  ]
+}
