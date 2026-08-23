@@ -1,15 +1,27 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import Toast from 'primevue/toast'
+import Button from 'primevue/button'
+import UnitToggle from '@/components/exercise/UnitToggle.vue'
 import PixelWeatherScene from '@/components/scene/PixelWeatherScene.vue'
 import { useWeatherStore } from '@/stores/weatherStore'
 import { sceneFor } from '@/data/weatherScenes'
 import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 
 const weatherStore = useWeatherStore()
+const route = useRoute()
 
 // 고른 도시의 날씨가 그대로 배경이 된다
 const scene = computed(() => sceneFor(weatherStore.sceneCode, weatherStore.sceneIsNight))
+
+// 날씨와 무관한 실습 화면에서는 관측 막대를 숨긴다
+const showWeatherBar = computed(() => route.name !== 'practice')
+
+const lastUpdatedLabel = computed(() => {
+  if (!weatherStore.lastUpdated) return '업데이트 대기 중'
+  return `마지막 관측 ${weatherStore.lastUpdated.toLocaleTimeString('ko-KR')}`
+})
 </script>
 
 <template>
@@ -28,14 +40,34 @@ const scene = computed(() => sceneFor(weatherStore.sceneCode, weatherStore.scene
 
         <nav class="main-nav" aria-label="주요 메뉴">
           <RouterLink :to="{ name: 'weather-home' }">관측소</RouterLink>
+          <RouterLink :to="{ name: 'regions' }">전체 지역</RouterLink>
           <RouterLink :to="{ name: 'weather-about' }">소개</RouterLink>
           <RouterLink :to="{ name: 'practice' }">실습</RouterLink>
         </nav>
       </div>
 
-      <div class="scene-strip">
-        <span class="scene-strip__dot" aria-hidden="true"></span>
-        지금 배경: {{ scene.label }}
+      <!-- 히어로였던 내용을 헤더 안으로 합쳤다 -->
+      <div v-if="showWeatherBar" class="weather-bar">
+        <div class="weather-bar__title">
+          <span class="px-eyebrow">MESOZOIC WEATHER STATION</span>
+          <h1>오늘의 전국 날씨</h1>
+          <p>
+            <span class="weather-bar__dot" aria-hidden="true"></span>
+            지도나 카드를 누르면 배경이 그 지역 하늘로 바뀝니다 · 지금은
+            <strong>{{ scene.label }}</strong>
+          </p>
+        </div>
+
+        <div class="weather-bar__controls">
+          <UnitToggle />
+          <Button
+            :label="weatherStore.isLoading ? '관측 중...' : '다시 관측'"
+            icon="pi pi-refresh"
+            :disabled="weatherStore.isLoading"
+            @click="weatherStore.fetchWeather(true)"
+          />
+          <span class="px-dim">{{ lastUpdatedLabel }}</span>
+        </div>
       </div>
     </header>
 
@@ -130,24 +162,43 @@ const scene = computed(() => sceneFor(weatherStore.sceneCode, weatherStore.scene
   color: var(--px-accent-ink);
 }
 
-/* 지금 어떤 날씨 배경인지 알려주는 띠 */
-.scene-strip {
+/* 헤더에 합쳐 넣은 관측 막대 */
+.weather-bar {
   display: flex;
-  padding: 5px 0;
   width: min(100% - 32px, 1140px);
   margin: 0 auto;
+  padding: 12px 0 14px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px 20px;
+  border-top: 2px solid var(--px-edge-light);
+}
+
+.weather-bar__title h1 {
+  margin: 4px 0 4px;
+  font-size: 22px;
+}
+
+.weather-bar__title p {
+  display: flex;
+  margin: 0;
   align-items: center;
   gap: 7px;
-  border-top: 2px solid var(--px-edge-light);
+  color: var(--px-ink-dim);
+  font-size: 11px;
+}
+
+.weather-bar__title strong {
   color: var(--px-accent);
   font-family: var(--px-font-display);
-  font-size: 11px;
   font-weight: 700;
 }
 
-.scene-strip__dot {
+.weather-bar__dot {
   width: 6px;
   height: 6px;
+  flex: 0 0 auto;
   background: var(--px-accent);
   animation: blink 1.6s steps(2, end) infinite;
 }
@@ -158,10 +209,23 @@ const scene = computed(() => sceneFor(weatherStore.sceneCode, weatherStore.scene
   }
 }
 
+.weather-bar__controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .weather-bar__dot {
+    animation: none;
+  }
+}
+
 .app-content {
   width: min(100% - 32px, 1140px);
   margin: 0 auto;
-  padding: 28px 0 64px;
+  padding: 22px 0 64px;
 }
 
 @media (prefers-reduced-motion: reduce) {

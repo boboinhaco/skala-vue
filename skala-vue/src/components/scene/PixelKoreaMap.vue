@@ -59,78 +59,81 @@ const LEGEND = [
 <template>
   <div class="korea-map">
     <div class="korea-map__frame">
-      <svg
-        class="korea-map__svg"
-        :viewBox="VIEW"
-        shape-rendering="crispEdges"
-        role="group"
-        aria-label="전국 시도 날씨 지도"
-      >
-        <rect x="0" y="0" :width="MAP_W" :height="MAP_H" class="sea" />
-
-        <rect
-          v-for="(r, i) in land"
-          :key="`l${i}`"
-          :x="r.x"
-          :y="r.y"
-          :width="r.w"
-          height="1"
-          class="land"
-        />
-        <rect
-          v-for="(c, i) in coast"
-          :key="`c${i}`"
-          :x="c.x"
-          :y="c.y"
-          width="1"
-          height="1"
-          class="coast"
-        />
-
-        <!-- 관측소 -->
-        <g
-          v-for="m in markers"
-          :key="m.id"
-          class="marker"
-          :class="{ 'marker--on': m.selected }"
-          role="button"
-          tabindex="0"
-          :aria-label="`${m.name} ${typeof m.temp === 'number' ? Math.round(m.temp) + '도' : '데이터 없음'}`"
-          :aria-pressed="m.selected"
-          @click="emit('select', m.id)"
-          @keydown.enter.prevent="emit('select', m.id)"
-          @keydown.space.prevent="emit('select', m.id)"
-          @mouseenter="hovered = m.id"
-          @mouseleave="hovered = null"
-          @focus="hovered = m.id"
-          @blur="hovered = null"
+      <div class="korea-map__stage">
+        <svg
+          class="korea-map__svg"
+          :viewBox="VIEW"
+          preserveAspectRatio="xMidYMid meet"
+          shape-rendering="crispEdges"
+          role="group"
+          aria-label="전국 시도 날씨 지도"
         >
-          <rect
-            v-if="m.selected"
-            :x="m.x - 2"
-            :y="m.y - 2"
-            width="6"
-            height="6"
-            class="marker__ring"
-          />
-          <rect :x="m.x - 1" :y="m.y - 1" width="4" height="4" class="marker__edge" />
-          <rect :x="m.x" :y="m.y" width="2" height="2" :fill="m.color" />
-        </g>
-      </svg>
+          <rect x="0" y="0" :width="MAP_W" :height="MAP_H" class="sea" />
 
-      <!-- 이름표는 픽셀 폰트를 쓰려고 HTML로 얹는다 -->
-      <span
-        v-for="m in labelled"
-        :key="`t${m.id}`"
-        class="korea-map__tag"
-        :style="{
-          left: `${((m.x + 1 - 1) / 44) * 100}%`,
-          top: `${((m.y + 3 + 1) / 63) * 100}%`,
-        }"
-      >
-        {{ m.name }}
-        <b v-if="typeof m.temp === 'number'">{{ Math.round(m.temp) }}°</b>
-      </span>
+          <rect
+            v-for="(r, i) in land"
+            :key="`l${i}`"
+            :x="r.x"
+            :y="r.y"
+            :width="r.w"
+            height="1"
+            class="land"
+          />
+          <rect
+            v-for="(c, i) in coast"
+            :key="`c${i}`"
+            :x="c.x"
+            :y="c.y"
+            width="1"
+            height="1"
+            class="coast"
+          />
+
+          <!-- 관측소 -->
+          <g
+            v-for="m in markers"
+            :key="m.id"
+            class="marker"
+            :class="{ 'marker--on': m.selected }"
+            role="button"
+            tabindex="0"
+            :aria-label="`${m.name} ${typeof m.temp === 'number' ? Math.round(m.temp) + '도' : '데이터 없음'}`"
+            :aria-pressed="m.selected"
+            @click="emit('select', m.id)"
+            @keydown.enter.prevent="emit('select', m.id)"
+            @keydown.space.prevent="emit('select', m.id)"
+            @mouseenter="hovered = m.id"
+            @mouseleave="hovered = null"
+            @focus="hovered = m.id"
+            @blur="hovered = null"
+          >
+            <rect
+              v-if="m.selected"
+              :x="m.x - 2"
+              :y="m.y - 2"
+              width="6"
+              height="6"
+              class="marker__ring"
+            />
+            <rect :x="m.x - 1" :y="m.y - 1" width="4" height="4" class="marker__edge" />
+            <rect :x="m.x" :y="m.y" width="2" height="2" :fill="m.color" />
+          </g>
+        </svg>
+
+        <!-- 이름표는 픽셀 폰트를 쓰려고 HTML로 얹는다 -->
+        <span
+          v-for="m in labelled"
+          :key="`t${m.id}`"
+          class="korea-map__tag"
+          :style="{
+            left: `${((m.x + 1 - 1) / 44) * 100}%`,
+            top: `${((m.y + 3 + 1) / 63) * 100}%`,
+          }"
+        >
+          {{ m.name }}
+          <b v-if="typeof m.temp === 'number'">{{ Math.round(m.temp) }}°</b>
+        </span>
+      </div>
     </div>
 
     <ul class="korea-map__legend">
@@ -142,16 +145,36 @@ const LEGEND = [
 </template>
 
 <style scoped>
+.korea-map {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+}
+
+/* 카드가 세로로 늘어나면 지도도 같이 커진다 */
 .korea-map__frame {
-  position: relative;
+  display: flex;
+  flex: 1;
+  min-height: 240px;
+  padding: 4px;
   border: 2px solid var(--px-edge);
   background: #0a1322;
+}
+
+/* viewBox 와 같은 비율을 유지하는 상자.
+   SVG 와 이름표가 이 상자를 공유해야 좌표가 어긋나지 않는다. */
+.korea-map__stage {
+  position: relative;
+  max-width: 100%;
+  max-height: 100%;
+  margin: auto;
+  aspect-ratio: 44 / 64;
 }
 
 .korea-map__svg {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
   image-rendering: pixelated;
 }
 
