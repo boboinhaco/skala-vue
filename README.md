@@ -9,12 +9,12 @@ SKALA Vue 과제 1~8을 하나의 코드베이스로 계속 업그레이드하�
 **🔗 배포 주소 — https://여기에_실제_URL**
 **📁 저장소 — https://github.com/계정명/저장소명** (Public)
 
-| 메인 대시보드 | 전국 지도 · 운석 경보 |
-| --- | --- |
+| 메인 대시보드                     | 전국 지도 · 운석 경보            |
+| --------------------------------- | -------------------------------- |
 | ![메인](docs/screenshot-home.png) | ![지도](docs/screenshot-map.png) |
 
-| 발자국 타임라인 · 공룡 마스코트 | 상세 페이지 |
-| --- | --- |
+| 발자국 타임라인 · 공룡 마스코트       | 상세 페이지                         |
+| ------------------------------------- | ----------------------------------- |
 | ![타임라인](docs/screenshot-dino.png) | ![상세](docs/screenshot-detail.png) |
 
 <!--
@@ -80,13 +80,13 @@ VITE_PRIMEUI_LICENSE=발급받은_PrimeUI_키
 
 네 군데를 놓고 비교했습니다.
 
-|  | Vercel | Netlify | Cloudflare Pages | GitHub Pages |
-| --- | --- | --- | --- | --- |
-| Vite 프리셋 자동 인식 | ✅ | ✅ | ⚠️ 수동 선택 | ❌ 워크플로 작성 |
-| push 시 자동 배포 | ✅ | ✅ | ✅ | ⚠️ Actions 필요 |
-| PR별 프리뷰 URL | ✅ | ✅ | ✅ | ❌ |
-| 환경 변수 관리 UI | ✅ | ✅ | ✅ | ❌ |
-| SPA 새로고침 404 | ⚠️ rewrite 설정 | ⚠️ `_redirects` | ✅ 기본 지원 | ⚠️ `404.html` 우회 |
+|                       | Vercel          | Netlify         | Cloudflare Pages | GitHub Pages       |
+| --------------------- | --------------- | --------------- | ---------------- | ------------------ |
+| Vite 프리셋 자동 인식 | ✅              | ✅              | ⚠️ 수동 선택     | ❌ 워크플로 작성   |
+| push 시 자동 배포     | ✅              | ✅              | ✅               | ⚠️ Actions 필요    |
+| PR별 프리뷰 URL       | ✅              | ✅              | ✅               | ❌                 |
+| 환경 변수 관리 UI     | ✅              | ✅              | ✅               | ❌                 |
+| SPA 새로고침 404      | ⚠️ rewrite 설정 | ⚠️ `_redirects` | ✅ 기본 지원     | ⚠️ `404.html` 우회 |
 
 **GitHub Pages는 바로 뺐습니다.** 배포 주소가 `계정명.github.io/저장소명/` 형태라
 `vite.config.js`의 `base`랑 라우터 설정을 둘 다 맞춰야 하는데, 이번 과제가 라우팅을 배우는 건데
@@ -98,7 +98,8 @@ Cloudflare Pages는 SPA 404를 설정 없이 처리해주는 게 매력적이었
 
 ### 배포 설정
 
-- Framework Preset: **Vite**
+- Framework Preset: **Vite** (자동 인식)
+- Root Directory: **저장소 루트** — 앱이 루트에 있어 따로 지정할 필요가 없습니다
 - Environment Variables: `VITE_OPENWEATHER_API_KEY`, `VITE_PRIMEUI_LICENSE`
 - [`vercel.json`](./vercel.json)에 rewrite 규칙 추가
 
@@ -128,25 +129,25 @@ https://github.com/계정/저장소/blob/main/src/components/exercise/WeatherCar
 
 ### 과제 1 — Weather Mockup
 
-| 요구사항 | 구현 위치 | 메모 |
-| --- | --- | --- |
-| 배열 렌더링 (v-for), `:key`에 id 바인딩 | [`ObservatoryList.vue`](링크) · [`PixelKoreaMap.vue`](링크) | 도시 고유 id를 key로 |
-| 조건부 렌더링 (v-if) 기온 라벨 | [`WeatherCard.vue`](링크) | 요구는 2구간이었는데 슈퍼핫/더움/선선함/쌀쌀함 4구간으로 늘렸습니다 |
-| 양방향 바인딩 및 한글 처리 (`:value` `@input`) | [`SearchBar.vue`](링크) | v-model을 쓰면 한글 조합 중에 값이 안 들어와서 요구대로 `:value`+`@input` |
-| 카드 클릭 시 상태바에 "{도시}이 선택되었습니다" | [`WeatherHomeView.vue`](링크) | |
-| 상세보기 버튼 → **버블링 없이** `window.alert` | [`WeatherParent.vue`](링크) | `@click.stop`. 과제 4에서 `router.push`로 교체했고 원본은 보존 |
-| 본인만의 데이터 + Mockup 추가 | [1일차 Customization](#1일차--본인만의-데이터와-mockup-추가) | |
+| 요구사항                                        | 구현 위치                                                    | 메모                                                                      |
+| ----------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------------------- |
+| 배열 렌더링 (v-for), `:key`에 id 바인딩         | [`ObservatoryList.vue`](링크) · [`PixelKoreaMap.vue`](링크)  | 도시 고유 id를 key로                                                      |
+| 조건부 렌더링 (v-if) 기온 라벨                  | [`WeatherCard.vue`](링크)                                    | 요구는 2구간이었는데 슈퍼핫/더움/선선함/쌀쌀함 4구간으로 늘렸습니다       |
+| 양방향 바인딩 및 한글 처리 (`:value` `@input`)  | [`SearchBar.vue`](링크)                                      | v-model을 쓰면 한글 조합 중에 값이 안 들어와서 요구대로 `:value`+`@input` |
+| 카드 클릭 시 상태바에 "{도시}이 선택되었습니다" | [`WeatherHomeView.vue`](링크)                                |                                                                           |
+| 상세보기 버튼 → **버블링 없이** `window.alert`  | [`WeatherParent.vue`](링크)                                  | `@click.stop`. 과제 4에서 `router.push`로 교체했고 원본은 보존            |
+| 본인만의 데이터 + Mockup 추가                   | [1일차 Customization](#1일차--본인만의-데이터와-mockup-추가) |                                                                           |
 
 ### 과제 2 — Weather Composition
 
-| 요구사항 | 구현 위치 | 메모 |
-| --- | --- | --- |
-| 반응형 상태 관리 | [`weatherStore.js`](링크) | `searchQuery` `selectedCityId` `weatherList` |
-| computed 활용 (`filteredWeatherList`) | [`WeatherHomeView.vue`](링크) | 검색어가 도시명에 포함된 항목만 |
-| **watch** — selectedCityInfo 감시 → **콘솔로그** | [`WeatherParent.vue`](링크) | 상태바 문구 바뀔 때마다 콘솔 출력 |
-| **watchEffect** — searchQuery 추적 → **콘솔로그** | [`WeatherParent.vue`](링크) | 타이핑할 때마다 콘솔 출력 |
-| 검색 결과 3분기 표시 | [`WeatherHomeView.vue`](링크) | 빈 검색어 / 일치 / 불일치 안내 |
-| 본인만의 상태·Computed·Watcher 추가 | [2일차 Customization](#2일차--본인만의-반응형-상태computedwatcher-추가) | |
+| 요구사항                                          | 구현 위치                                                               | 메모                                         |
+| ------------------------------------------------- | ----------------------------------------------------------------------- | -------------------------------------------- |
+| 반응형 상태 관리                                  | [`weatherStore.js`](링크)                                               | `searchQuery` `selectedCityId` `weatherList` |
+| computed 활용 (`filteredWeatherList`)             | [`WeatherHomeView.vue`](링크)                                           | 검색어가 도시명에 포함된 항목만              |
+| **watch** — selectedCityInfo 감시 → **콘솔로그**  | [`WeatherParent.vue`](링크)                                             | 상태바 문구 바뀔 때마다 콘솔 출력            |
+| **watchEffect** — searchQuery 추적 → **콘솔로그** | [`WeatherParent.vue`](링크)                                             | 타이핑할 때마다 콘솔 출력                    |
+| 검색 결과 3분기 표시                              | [`WeatherHomeView.vue`](링크)                                           | 빈 검색어 / 일치 / 불일치 안내               |
+| 본인만의 상태·Computed·Watcher 추가               | [2일차 Customization](#2일차--본인만의-반응형-상태computedwatcher-추가) |                                              |
 
 > **확인 방법:** 과제 2에서 요구한 `watch` / `watchEffect` 콘솔로그는 `WeatherParent.vue`에
 > 그대로 살아 있고, **`/practice` 경로에서 실제로 동작합니다.**
@@ -155,24 +156,24 @@ https://github.com/계정/저장소/blob/main/src/components/exercise/WeatherCar
 
 ### 과제 3 — Weather Component
 
-| 요구사항 | 구현 위치 | 메모 |
-| --- | --- | --- |
-| `WeatherParent.vue` — 모든 반응형 데이터 유지 | [링크](링크) | |
-| `BaseDashboardCard.vue` — **`<slot>`** 배치 | [링크](링크) | PrimeVue `Card`를 감싸고 `title`/`subtitle`/기본 슬롯 제공 |
-| `SearchBar.vue` — props + **`update-query`** emit | [링크](링크) | |
-| `WeatherCard.vue` — props + **`select-card`** / **`click-detail`** emit | [링크](링크) | |
-| 각 컴포넌트 **`<style scoped>`** 로 디자인 분리 | 전 컴포넌트 | 공용 토큰만 `pixel.css`, 나머지는 전부 scoped |
-| 본인 Mockup 부분 추가 컴포넌트화 | [3일차 Customization](#3일차--추가-컴포넌트와-추가-view) | 지정 4개 외에 **18개 더 분리** |
+| 요구사항                                                                | 구현 위치                                                | 메모                                                       |
+| ----------------------------------------------------------------------- | -------------------------------------------------------- | ---------------------------------------------------------- |
+| `WeatherParent.vue` — 모든 반응형 데이터 유지                           | [링크](링크)                                             |                                                            |
+| `BaseDashboardCard.vue` — **`<slot>`** 배치                             | [링크](링크)                                             | PrimeVue `Card`를 감싸고 `title`/`subtitle`/기본 슬롯 제공 |
+| `SearchBar.vue` — props + **`update-query`** emit                       | [링크](링크)                                             |                                                            |
+| `WeatherCard.vue` — props + **`select-card`** / **`click-detail`** emit | [링크](링크)                                             |                                                            |
+| 각 컴포넌트 **`<style scoped>`** 로 디자인 분리                         | 전 컴포넌트                                              | 공용 토큰만 `pixel.css`, 나머지는 전부 scoped              |
+| 본인 Mockup 부분 추가 컴포넌트화                                        | [3일차 Customization](#3일차--추가-컴포넌트와-추가-view) | 지정 4개 외에 **18개 더 분리**                             |
 
 분리하면서 줄어든 줄 수를 재봤습니다.
 
-| 원본 | 분리 후 |
-| --- | --- |
-| `PixelWeatherScene.vue` 458줄 | 79줄 + 레이어 4개(하늘/천체/지형/날씨효과) |
-| `WeatherHomeView.vue` 335줄 | 209줄 + `ObservatoryList` `SelectedSummary` |
-| `MeteorAlertCard.vue` 219줄 | 86줄 + `MeteorIcon` `IndicatorBar` |
-| `AxiosJson.vue` 387줄 | 236줄 + `PostCreateForm` `PostItem` `ApiMessage` |
-| `App.vue` 253줄 | 34줄 + `SiteHeader` `BrandMark` `MainNav` `WeatherBar` `WeatherNowChip` |
+| 원본                          | 분리 후                                                                 |
+| ----------------------------- | ----------------------------------------------------------------------- |
+| `PixelWeatherScene.vue` 458줄 | 79줄 + 레이어 4개(하늘/천체/지형/날씨효과)                              |
+| `WeatherHomeView.vue` 335줄   | 209줄 + `ObservatoryList` `SelectedSummary`                             |
+| `MeteorAlertCard.vue` 219줄   | 86줄 + `MeteorIcon` `IndicatorBar`                                      |
+| `AxiosJson.vue` 387줄         | 236줄 + `PostCreateForm` `PostItem` `ApiMessage`                        |
+| `App.vue` 253줄               | 34줄 + `SiteHeader` `BrandMark` `MainNav` `WeatherBar` `WeatherNowChip` |
 
 줄 수만 줄인 게 아니라 실제로 재사용되는 것들도 있습니다.
 `TempLegend`는 지도와 타임라인이 같이 쓰고, `TemperatureReading`은 4곳에 흩어져 있던 기온 표기를
@@ -180,36 +181,36 @@ https://github.com/계정/저장소/blob/main/src/components/exercise/WeatherCar
 
 ### 과제 4 — Weather Router
 
-| 요구사항 | 구현 위치 | 메모 |
-| --- | --- | --- |
-| **지연 로딩** 적용 | [`router/index.js`](링크) | 라우트 6개 전부 `() => import()` |
-| **Catch-all Route** 적용 | [`router/index.js`](링크) | `/:pathMatch(.*)*` → `NotFoundView` |
-| `App.vue` — RouterLink 네비 + RouterView | [`App.vue`](링크) | |
-| `WeatherHomeView` — alert 제거 후 **Programmatic Navigation** | [링크](링크) | `router.push({ name: 'weather-detail', params: { cityId } })` |
-| `WeatherDetailView` — `:cityId` 동적 매칭, Mount 시점 선택 | [링크](링크) | 진입하면 배경도 그 지역 날씨로 바뀝니다 |
-| `WeatherAboutView` — 내용 작성 + **메인 대시보드로 돌아가기** | [링크](링크) | 서비스 소개 + 홈 복귀 버튼 |
-| `NotFoundView` | [링크](링크) | |
-| **본인 추가 view** | [`RegionsView.vue`](링크) | `/regions` 전체 지역 화면 |
+| 요구사항                                                      | 구현 위치                 | 메모                                                          |
+| ------------------------------------------------------------- | ------------------------- | ------------------------------------------------------------- |
+| **지연 로딩** 적용                                            | [`router/index.js`](링크) | 라우트 6개 전부 `() => import()`                              |
+| **Catch-all Route** 적용                                      | [`router/index.js`](링크) | `/:pathMatch(.*)*` → `NotFoundView`                           |
+| `App.vue` — RouterLink 네비 + RouterView                      | [`App.vue`](링크)         |                                                               |
+| `WeatherHomeView` — alert 제거 후 **Programmatic Navigation** | [링크](링크)              | `router.push({ name: 'weather-detail', params: { cityId } })` |
+| `WeatherDetailView` — `:cityId` 동적 매칭, Mount 시점 선택    | [링크](링크)              | 진입하면 배경도 그 지역 날씨로 바뀝니다                       |
+| `WeatherAboutView` — 내용 작성 + **메인 대시보드로 돌아가기** | [링크](링크)              | 서비스 소개 + 홈 복귀 버튼                                    |
+| `NotFoundView`                                                | [링크](링크)              |                                                               |
+| **본인 추가 view**                                            | [`RegionsView.vue`](링크) | `/regions` 전체 지역 화면                                     |
 
 ### 과제 5 — Weather Store
 
-| 요구사항 | 구현 위치 | 메모 |
-| --- | --- | --- |
-| `configStore.js` — state `unit` / getter `unitSymbol` / action `toggleUnit` | [링크](링크) | 초기값 `celsius` |
-| `UnitToggler.vue` 배치 | [`UnitToggle.vue`](링크) | PrimeVue `SelectButton`. 위치는 [변경 기록 5번](#5-unittoggle-위치) 참고 |
-| 메인과 상세 날씨에 단위 설정 적용 | [`useTemperature.js`](링크) | 헤더 칩까지 같이 바뀝니다 |
-| 본인만의 추가 Store | [`favoriteStore.js`](링크) · [`weatherStore.js`](링크) | |
+| 요구사항                                                                    | 구현 위치                                              | 메모                                                                     |
+| --------------------------------------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------------------ |
+| `configStore.js` — state `unit` / getter `unitSymbol` / action `toggleUnit` | [링크](링크)                                           | 초기값 `celsius`                                                         |
+| `UnitToggler.vue` 배치                                                      | [`UnitToggle.vue`](링크)                               | PrimeVue `SelectButton`. 위치는 [변경 기록 5번](#5-unittoggle-위치) 참고 |
+| 메인과 상세 날씨에 단위 설정 적용                                           | [`useTemperature.js`](링크)                            | 헤더 칩까지 같이 바뀝니다                                                |
+| 본인만의 추가 Store                                                         | [`favoriteStore.js`](링크) · [`weatherStore.js`](링크) |                                                                          |
 
 강의자료에 "Composable로 해결 가능함 (범위 제외)"라고 적힌 부분이 있었는데,
 메인이랑 상세에 같은 변환 코드를 두 번 쓰는 게 계속 걸려서 `useTemperature`로 빼봤습니다.
 
 ### 과제 6 — Weather Axios
 
-| 요구사항 | 구현 위치 | 메모 |
-| --- | --- | --- |
-| OpenWeatherMap 실제 데이터 연동 | [`weatherStore.js`](링크) | Current Weather API — 53개 도시 |
-| OpenWeatherMap **추가** API | [링크](링크) | Air Pollution API, 5 day / 3 hour Forecast API |
-| **기타 외부 API** 추가 | [`meteorAlert.js`](링크) | **Open-Meteo** Air Quality + Forecast ([선정 이유](#4-1-자외선을-추정에서-실측으로-교체--open-meteo-도입)) |
+| 요구사항                        | 구현 위치                 | 메모                                                                                                       |
+| ------------------------------- | ------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| OpenWeatherMap 실제 데이터 연동 | [`weatherStore.js`](링크) | Current Weather API — 53개 도시                                                                            |
+| OpenWeatherMap **추가** API     | [링크](링크)              | Air Pollution API, 5 day / 3 hour Forecast API                                                             |
+| **기타 외부 API** 추가          | [`meteorAlert.js`](링크)  | **Open-Meteo** Air Quality + Forecast ([선정 이유](#4-1-자외선을-추정에서-실측으로-교체--open-meteo-도입)) |
 
 요구사항 외에 추가로 넣은 것들입니다.
 
@@ -227,11 +228,11 @@ PrimeVue 5 적용. [선택 이유](#ui-라이브러리로-primevue를-고른-이
 
 ### 과제 8 — Build & Deployment
 
-| 요구사항 | 상태 |
-| --- | --- |
-| ESLint로 Error 0건 | ✅ `npm run lint` (ESLint + oxlint) 오류 0 |
-| API 키 환경 변수 분리, Git 업로드 차단 | ✅ `.env.local` + `*.local` gitignore |
-| Build 후 정적 호스팅 | ✅ Vercel + `vercel.json` |
+| 요구사항                               | 상태                                       |
+| -------------------------------------- | ------------------------------------------ |
+| ESLint로 Error 0건                     | ✅ `npm run lint` (ESLint + oxlint) 오류 0 |
+| API 키 환경 변수 분리, Git 업로드 차단 | ✅ `.env.local` + `*.local` gitignore      |
+| Build 후 정적 호스팅                   | ✅ Vercel + `vercel.json`                  |
 
 ### 제출 전 확인
 
@@ -286,14 +287,14 @@ PrimeVue 5 적용. [선택 이유](#ui-라이브러리로-primevue를-고른-이
 
 ## 기술 스택과 선택 이유
 
-| 구분 | 선택 | 이유 |
-| --- | --- | --- |
-| 프레임워크 | Vue 3 (`<script setup>`) | 과제 지정 |
-| 상태 관리 | Pinia | 과제 지정. Setup Store 문법으로 통일 |
-| 라우팅 | Vue Router (지연 로딩) | 과제 지정 |
-| HTTP | Axios | 과제 지정. 아래 따로 정리 |
-| **UI 라이브러리** | **PrimeVue 5** | 아래 따로 정리 |
-| 폰트 | Galmuri (OFL-1.1) | 한글 지원되는 픽셀 폰트 |
+| 구분              | 선택                     | 이유                                 |
+| ----------------- | ------------------------ | ------------------------------------ |
+| 프레임워크        | Vue 3 (`<script setup>`) | 과제 지정                            |
+| 상태 관리         | Pinia                    | 과제 지정. Setup Store 문법으로 통일 |
+| 라우팅            | Vue Router (지연 로딩)   | 과제 지정                            |
+| HTTP              | Axios                    | 과제 지정. 아래 따로 정리            |
+| **UI 라이브러리** | **PrimeVue 5**           | 아래 따로 정리                       |
+| 폰트              | Galmuri (OFL-1.1)        | 한글 지원되는 픽셀 폰트              |
 
 ### UI 라이브러리로 PrimeVue를 고른 이유
 
@@ -340,13 +341,13 @@ theme: { preset: PixelPreset, options: { cssLayer: { name: 'primevue', order: 'p
 
 ### 사용한 외부 API
 
-| API | 제공처 | 쓰는 곳 | 키 |
-| --- | --- | --- | --- |
-| Current Weather | OpenWeatherMap | 53개 도시 현재 날씨 | 필요 |
-| Air Pollution | OpenWeatherMap | 미세먼지(PM2.5) | 필요 |
-| 5 day / 3 hour Forecast | OpenWeatherMap | 발자국 타임라인, 강수확률 | 필요 |
-| Air Quality | **Open-Meteo** | **자외선 실측, 오존** | 불필요 |
-| Forecast (daily) | **Open-Meteo** | **오늘 최고/최저 기온** | 불필요 |
+| API                     | 제공처         | 쓰는 곳                   | 키     |
+| ----------------------- | -------------- | ------------------------- | ------ |
+| Current Weather         | OpenWeatherMap | 53개 도시 현재 날씨       | 필요   |
+| Air Pollution           | OpenWeatherMap | 미세먼지(PM2.5)           | 필요   |
+| 5 day / 3 hour Forecast | OpenWeatherMap | 발자국 타임라인, 강수확률 | 필요   |
+| Air Quality             | **Open-Meteo** | **자외선 실측, 오존**     | 불필요 |
+| Forecast (daily)        | **Open-Meteo** | **오늘 최고/최저 기온**   | 불필요 |
 
 OpenWeather는 **분당 60회** 제한이 있어서 도시 수만큼만 쓰고(53회),
 나머지는 보고 있는 지역 한 곳만 요청합니다.
@@ -545,11 +546,11 @@ SPA는 라우팅을 브라우저가 하는데, **서버에는 `/regions`라는 �
 라우트 자체는 매칭되니까 Catch-all에 안 걸립니다.
 `WeatherDetailView`에서 상태를 나눠 각각 다른 안내를 띄웁니다.
 
-| 상태 | 화면 |
-| --- | --- |
-| 불러오는 중 | "실시간 날씨를 받아오고 있습니다" |
-| API 실패 | 오류 메시지 + **다시 시도** 버튼 |
-| 도시 없음 | "도시를 찾을 수 없습니다" + 주소 확인 안내 |
+| 상태        | 화면                                       |
+| ----------- | ------------------------------------------ |
+| 불러오는 중 | "실시간 날씨를 받아오고 있습니다"          |
+| API 실패    | 오류 메시지 + **다시 시도** 버튼           |
+| 도시 없음   | "도시를 찾을 수 없습니다" + 주소 확인 안내 |
 
 ### ④ API 실패는 404가 아닙니다
 
@@ -584,11 +585,11 @@ SPA는 라우팅을 브라우저가 하는데, **서버에는 `/regions`라는 �
 도시 카드는 기온·습도·풍속만 보여주고 있었습니다.
 그래서 예보처럼 선택한 도시만 받도록 바꿔서 **55회**로 줄였습니다.
 
-|  | 요청 수 |
-| --- | --- |
-| 이전 (17곳 × 2) | 34회 |
+|                            | 요청 수               |
+| -------------------------- | --------------------- |
+| 이전 (17곳 × 2)            | 34회                  |
 | 53곳 × 2 (그대로 늘렸다면) | 106회 — **한도 초과** |
-| 53곳 + 대기질 1 + 예보 1 | **55회** |
+| 53곳 + 대기질 1 + 예보 1   | **55회**              |
 
 ### 4. 자외선을 API 대신 계산으로 추정
 
@@ -599,11 +600,11 @@ OpenWeather 자외선 지수는 One Call 3.0 **유료 구독**이 필요했습�
 
 과제 6-3(기타 외부 API)을 채우면서 후보를 몇 개 놓고 봤습니다.
 
-|  | 에어코리아 / 기상청 단기예보 | **Open-Meteo** |
-| --- | --- | --- |
-| API 키 | 공공데이터포털 발급 필요 | **불필요** |
-| CORS | 엔드포인트별로 확인 필요 | **`access-control-allow-origin: *` 직접 확인함** |
-| 기존 기능과의 관계 | 값을 하나 더 표시 | **기존 약점(추정 자외선)을 대체** |
+|                    | 에어코리아 / 기상청 단기예보 | **Open-Meteo**                                   |
+| ------------------ | ---------------------------- | ------------------------------------------------ |
+| API 키             | 공공데이터포털 발급 필요     | **불필요**                                       |
+| CORS               | 엔드포인트별로 확인 필요     | **`access-control-allow-origin: *` 직접 확인함** |
+| 기존 기능과의 관계 | 값을 하나 더 표시            | **기존 약점(추정 자외선)을 대체**                |
 
 `추정`이라는 약점이 있던 지표를 실측으로 바꾸는 쪽이,
 값을 하나 더 늘리는 것보다 낫다고 판단해서 Open-Meteo를 골랐습니다.
@@ -629,7 +630,16 @@ OpenWeather 자외선 지수는 One Call 3.0 **유료 구독**이 필요했습�
 헤더 전체를 고정했더니 배너+관측 막대가 260px를 넘어서 **화면의 30%를 잡아먹었습니다.**
 **배너(제목+메뉴)만 고정**하고 관측 막대는 같이 스크롤되게 바꿨습니다.
 
-### 8. PrimeVue 5 라이선스 전환
+### 8. 저장소 폴더 구조 평탄화
+
+처음에는 강의 제공 프로젝트를 받으면서 `skala-vue/skala-vue/` 형태로 **앱이 한 단계 안쪽**에
+들어가 있었습니다. 이 구조는 배포할 때 Vercel이 루트에서 `package.json`을 찾지 못해
+Root Directory를 따로 지정해야 하고, 경로도 한 번 더 들어가야 해서 정리했습니다.
+
+`git`이 파일 109개를 **rename으로 인식**해 변경 이력은 그대로 보존됩니다.
+함께 저장소 루트에 남아 있던 빈 `package-lock.json`과 `.DS_Store`도 정리했습니다.
+
+### 9. PrimeVue 5 라이선스 전환
 
 작업 중에 `Invalid PrimeUI License` 배너가 떠서 찾아보니,
 PrimeVue가 5부터 MIT에서 **PrimeUI 라이선스**로 바뀌어 있었습니다(4.5.5까지 MIT).
@@ -654,12 +664,12 @@ PrimeVue가 5부터 MIT에서 **PrimeUI 라이선스**로 바뀌어 있었습니
 > 다만 이 저장소는 **단원별 요구사항을 파일 단위로 확인해야 하는 과제 제출물**이라,
 > 확인 편의를 우선해서 일부러 남겼습니다.
 
-| 파일 | 시점 | 현재 상태 |
-| --- | --- | --- |
-| `components/exercise/WeatherParent.vue` | 과제 2\~3 | 보존. `watch` / `watchEffect` / `window.alert` 원본 포함 |
-| `components/exercise/WeatherMockup.vue` | 과제 1 | 보존. 초기 목업 원본 |
-| `views/PracticeView.vue` + `components/practices/` | 강의 실습 | 보존. `/practice`에서 동작 확인 가능 |
-| `stores/counter.js` | 강의 기본 | 보존 |
+| 파일                                               | 시점      | 현재 상태                                                |
+| -------------------------------------------------- | --------- | -------------------------------------------------------- |
+| `components/exercise/WeatherParent.vue`            | 과제 2\~3 | 보존. `watch` / `watchEffect` / `window.alert` 원본 포함 |
+| `components/exercise/WeatherMockup.vue`            | 과제 1    | 보존. 초기 목업 원본                                     |
+| `views/PracticeView.vue` + `components/practices/` | 강의 실습 | 보존. `/practice`에서 동작 확인 가능                     |
+| `stores/counter.js`                                | 강의 기본 | 보존                                                     |
 
 - 과제 4에서 `WeatherParent`는 `WeatherHomeView`로 **대체**됐고,
   상세보기의 `window.alert`는 `router.push`로 바뀌었습니다.
@@ -726,12 +736,12 @@ One Call 3.0이 401을 뱉었습니다. 별도 유료 구독이 필요한 엔드
 
 ## 사용 리소스와 라이선스
 
-| 리소스 | 출처 | 라이선스 |
-| --- | --- | --- |
-| Galmuri 픽셀 폰트 | quiple/galmuri | OFL-1.1 |
-| 공룡 스프라이트 · 배경 · 발자국 | 직접 제작 | — |
-| 날씨 데이터 | OpenWeatherMap | 무료 등급 |
-| 대기질 · 자외선 · 일별 예보 | Open-Meteo | CC BY 4.0 |
-| UI 컴포넌트 | PrimeVue 5 | PrimeUI Community License |
+| 리소스                          | 출처           | 라이선스                  |
+| ------------------------------- | -------------- | ------------------------- |
+| Galmuri 픽셀 폰트               | quiple/galmuri | OFL-1.1                   |
+| 공룡 스프라이트 · 배경 · 발자국 | 직접 제작      | —                         |
+| 날씨 데이터                     | OpenWeatherMap | 무료 등급                 |
+| 대기질 · 자외선 · 일별 예보     | Open-Meteo     | CC BY 4.0                 |
+| UI 컴포넌트                     | PrimeVue 5     | PrimeUI Community License |
 
 <!-- 스프라이트를 외부 에셋으로 바꾸셨다면 출처와 라이선스를 여기에 꼭 추가하세요. -->
