@@ -2,10 +2,10 @@
 import { computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import Button from 'primevue/button'
-import Tag from 'primevue/tag'
 import Message from 'primevue/message'
 import BaseDashboardCard from '@/components/exercise/BaseDashboardCard.vue'
-import PixelWeatherChip from '@/components/scene/PixelWeatherChip.vue'
+import DetailHero from '@/components/exercise/DetailHero.vue'
+import StatGrid from '@/components/exercise/StatGrid.vue'
 import DinoMascotCard from '@/components/exercise/DinoMascotCard.vue'
 import { useTemperature } from '@/composables/useTemperature'
 import { useWeatherStore } from '@/stores/weatherStore'
@@ -58,30 +58,10 @@ const moveToHome = () => {
 <template>
   <div class="detail-page">
     <template v-if="hasData">
-      <header class="detail-hero">
-        <div class="detail-hero__chip">
-          <PixelWeatherChip
-            :weather-code="toWmoCode(selectedWeather.conditionId)"
-            :is-night="selectedWeather.isNight"
-          />
-        </div>
-        <div>
-          <span class="px-eyebrow">{{ selectedWeather.location }}</span>
-          <h1>{{ selectedWeather.name }}</h1>
-          <p class="detail-hero__status">
-            <Tag :value="scene.label" severity="info" />
-            <span class="px-dim">{{ selectedWeather.status }}</span>
-          </p>
-        </div>
-      </header>
+      <DetailHero :weather="selectedWeather" :scene-label="scene.label" />
 
       <BaseDashboardCard title="관측값" subtitle="OpenWeather 실시간 데이터">
-        <ul class="stat-grid">
-          <li v-for="s in stats" :key="s.label">
-            <span class="px-dim">{{ s.label }}</span>
-            <strong>{{ s.value }}</strong>
-          </li>
-        </ul>
+        <StatGrid :stats="stats" />
       </BaseDashboardCard>
 
       <BaseDashboardCard title="이 날씨의 공룡">
@@ -116,71 +96,4 @@ const moveToHome = () => {
   </div>
 </template>
 
-<style scoped>
-.detail-hero {
-  display: flex;
-  margin-bottom: 18px;
-  padding: 16px;
-  border: var(--px-border) solid var(--px-edge);
-  align-items: center;
-  gap: 16px;
-  background: var(--px-panel);
-  box-shadow:
-    inset 0 0 0 2px var(--px-edge-light),
-    var(--px-shadow);
-}
-
-.detail-hero__chip {
-  flex: 0 0 auto;
-  width: 120px;
-  height: 84px;
-  border: 2px solid var(--px-edge);
-  overflow: hidden;
-}
-
-.detail-hero h1 {
-  margin: 4px 0 8px;
-}
-
-.detail-hero__status {
-  display: flex;
-  margin: 0;
-  align-items: center;
-  gap: 8px;
-}
-
-.stat-grid {
-  display: grid;
-  margin: 0;
-  padding: 0;
-  gap: 8px;
-  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-  list-style: none;
-}
-
-.stat-grid li {
-  display: flex;
-  padding: 8px 10px;
-  border: 2px solid var(--px-edge);
-  flex-direction: column;
-  background: #0d1526;
-}
-
-.stat-grid strong {
-  color: var(--px-accent);
-  font-family: var(--px-font-display);
-  font-size: 14px;
-  font-weight: 700;
-}
-
-@media (max-width: 520px) {
-  .detail-hero {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .detail-hero__status {
-    justify-content: center;
-  }
-}
-</style>
+<style scoped></style>

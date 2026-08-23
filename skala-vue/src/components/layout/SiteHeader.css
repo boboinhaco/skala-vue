@@ -1,0 +1,27 @@
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 3px solid var(--px-edge);
+  /* 배경 하늘이 글자 뒤로 비치지 않도록 거의 불투명하게 */
+  background: rgb(9 13 26 / 97%);
+  backdrop-filter: blur(2px);
+}
+
+.site-header__inner {
+  display: flex;
+  width: var(--px-page);
+  min-height: 68px;
+  margin: 0 auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+@media (max-width: 680px) {
+  .site-header__inner {
+    padding: 12px 0;
+    flex-direction: column;
+    gap: 10px;
+  }
+}

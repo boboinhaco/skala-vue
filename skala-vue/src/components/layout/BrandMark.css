@@ -1,0 +1,29 @@
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--px-ink);
+  text-decoration: none;
+}
+
+.brand__icon {
+  font-size: 26px;
+  line-height: 1;
+}
+
+.brand__text strong,
+.brand__text small {
+  display: block;
+}
+
+.brand__text strong {
+  font-family: var(--px-font-display);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.brand__text small {
+  color: var(--px-ink-dim);
+  font-size: 11px;
+}

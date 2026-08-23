@@ -1,0 +1,12 @@
+/* 배경(PixelWeatherScene)이 z-index 0에 깔리므로 본문을 그 위로 올린다 */
+.app-shell {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+}
+
+.app-content {
+  width: var(--px-page);
+  margin: 0 auto;
+  padding: 22px 0 64px;
+}

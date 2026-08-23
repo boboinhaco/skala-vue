@@ -4,7 +4,7 @@ import Button from 'primevue/button'
 import Divider from 'primevue/divider'
 import BaseDashboardCard from '@/components/exercise/BaseDashboardCard.vue'
 import { SCENE_GROUPS } from '@/data/weatherScenes'
-import PixelWeatherChip from '@/components/scene/PixelWeatherChip.vue'
+import SceneGallery from '@/components/scene/SceneGallery.vue'
 
 const router = useRouter()
 
@@ -36,15 +36,7 @@ const moveToHome = () => {
     </header>
 
     <BaseDashboardCard title="날씨별 화면" subtitle="8가지 하늘 · 낮과 밤 각각">
-      <ul class="scene-grid">
-        <li v-for="s in SAMPLES" :key="s.group">
-          <div class="scene-grid__day"><PixelWeatherChip :weather-code="s.code" /></div>
-          <div class="scene-grid__night">
-            <PixelWeatherChip :weather-code="s.code" is-night />
-          </div>
-          <span>{{ s.label }}</span>
-        </li>
-      </ul>
+      <SceneGallery :samples="SAMPLES" />
       <p class="px-dim">총 {{ SCENE_GROUPS.length * 2 }}가지 화면이 준비돼 있습니다.</p>
     </BaseDashboardCard>
 
@@ -80,44 +72,6 @@ const moveToHome = () => {
 
 .about-hero p {
   margin: 0;
-}
-
-.scene-grid {
-  display: grid;
-  margin: 0 0 12px;
-  padding: 0;
-  gap: 10px;
-  grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
-  list-style: none;
-}
-
-.scene-grid li {
-  display: grid;
-  gap: 3px;
-  grid-template-areas: 'day night' 'label label';
-}
-
-.scene-grid__day,
-.scene-grid__night {
-  height: 46px;
-  border: 2px solid var(--px-edge);
-  overflow: hidden;
-}
-
-.scene-grid__day {
-  grid-area: day;
-}
-
-.scene-grid__night {
-  grid-area: night;
-}
-
-.scene-grid span {
-  color: var(--px-ink-dim);
-  font-family: var(--px-font-display);
-  font-size: 11px;
-  font-weight: 700;
-  grid-area: label;
 }
 
 .tech-list {

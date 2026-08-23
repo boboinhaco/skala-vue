@@ -1,0 +1,48 @@
+.now-chip {
+  display: flex;
+  margin: 0;
+  padding: 5px 10px;
+  border: 2px solid var(--px-edge);
+  align-items: center;
+  gap: 8px;
+  background: var(--px-panel-soft);
+}
+
+.now-chip__dot {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 auto;
+  background: var(--px-accent);
+  animation: blink 1.6s steps(2, end) infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0.2;
+  }
+}
+
+.now-chip__city {
+  color: var(--px-ink);
+  font-family: var(--px-font-display);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.now-chip__scene {
+  color: var(--px-ink-dim);
+  font-size: 11px;
+}
+
+.now-chip strong {
+  color: var(--px-accent);
+  font-family: var(--px-font-display);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .now-chip__dot {
+    animation: none;
+  }
+}

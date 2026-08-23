@@ -1,13 +1,11 @@
 <script setup>
-import { useTemperature } from '@/composables/useTemperature'
+import TemperatureReading from '@/components/common/TemperatureReading.vue'
 
 // 지도 아래 붙는 '지금 보는 곳' 요약.
 defineProps({
   weather: { type: Object, default: null },
   sceneLabel: { type: String, default: '' },
 })
-
-const { configStore, formatTemperature } = useTemperature()
 </script>
 
 <template>
@@ -19,7 +17,7 @@ const { configStore, formatTemperature } = useTemperature()
     <ul class="side-now__stats">
       <li>
         기온
-        <strong>{{ formatTemperature(weather.temp) }}{{ configStore.unitSymbol }}</strong>
+        <strong><TemperatureReading :temp="weather.temp" /></strong>
       </li>
       <li>
         습도 <strong>{{ weather.humidity }}%</strong>

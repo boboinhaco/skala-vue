@@ -4,7 +4,7 @@ import Button from 'primevue/button'
 import Tag from 'primevue/tag'
 import PixelWeatherChip from '@/components/scene/PixelWeatherChip.vue'
 import FavoriteStar from '@/components/common/FavoriteStar.vue'
-import { useTemperature } from '@/composables/useTemperature'
+import TemperatureReading from '@/components/common/TemperatureReading.vue'
 import { useFavoriteStore } from '@/stores/favoriteStore'
 import { toWmoCode, msToKmh } from '@/data/openWeatherToWmo'
 import { sceneFor } from '@/data/weatherScenes'
@@ -24,7 +24,6 @@ const props = defineProps({
 // 카드 선택(select-card)과 상세보기(click-detail)를 부모에게 전달한다
 const emit = defineEmits(['select-card', 'click-detail'])
 
-const { configStore, formatTemperature } = useTemperature()
 const favoriteStore = useFavoriteStore()
 
 const isFavorite = computed(() => favoriteStore.isFavorite(props.item.id))
@@ -89,7 +88,7 @@ const band = computed(() => {
 
     <div class="weather-card__end">
       <p class="weather-card__temp">
-        {{ formatTemperature(item.temp) }}<span>{{ configStore.unitSymbol }}</span>
+        <TemperatureReading :temp="item.temp" small-unit />
       </p>
       <Button
         label="상세"
@@ -200,10 +199,6 @@ const band = computed(() => {
   font-size: 22px;
   font-weight: 700;
   line-height: 1;
-}
-
-.weather-card__temp span {
-  font-size: 11px;
 }
 
 .weather-card__flag {

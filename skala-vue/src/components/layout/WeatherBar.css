@@ -1,0 +1,53 @@
+.weather-bar {
+  display: flex;
+  width: var(--px-page);
+  margin: 0 auto;
+  padding: 14px 0 16px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 14px 24px;
+  border-top: 2px solid var(--px-edge-light);
+}
+
+.weather-bar__title h1 {
+  margin: 5px 0 6px;
+  font-size: 22px;
+}
+
+/* 설명은 11px보다 키워서 본문 크기로 읽히게 한다 */
+.weather-bar__lead {
+  margin: 0;
+  color: #aebbd0;
+  font-size: 14px;
+}
+
+.weather-bar__side {
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.weather-bar__controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.weather-bar__updated {
+  color: var(--px-ink-dim);
+  font-size: 11px;
+}
+
+@media (max-width: 700px) {
+  .weather-bar__side {
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .weather-bar__updated {
+    text-align: right;
+  }
+}
