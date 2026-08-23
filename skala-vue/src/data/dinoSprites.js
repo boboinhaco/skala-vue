@@ -9,7 +9,7 @@ export const GRID_H = 20
 
 function normalizeGrid(grid) {
   return Array.from({ length: GRID_H }, (_, y) =>
-    (grid[y] ?? '').padEnd(GRID_W, '.').slice(0, GRID_W)
+    (grid[y] ?? '').padEnd(GRID_W, '.').slice(0, GRID_W),
   )
 }
 
@@ -60,7 +60,11 @@ function hexToRgb(hex) {
 
 function rgbToHex({ r, g, b }) {
   return `#${[r, g, b]
-    .map((v) => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0'))
+    .map((v) =>
+      Math.max(0, Math.min(255, Math.round(v)))
+        .toString(16)
+        .padStart(2, '0'),
+    )
     .join('')}`
 }
 
@@ -89,15 +93,15 @@ export function createPalette(accent = '#6D9B54') {
     C: mix(accent, '#FFD36B', 0.25),
 
     // weather/accessory colors
-    S: '#15191F',       // sunglasses
-    U: '#4169E1',       // umbrella
-    R: '#D64C4C',       // scarf
-    N: '#D54A43',       // winter hat
-    M: '#EAF3F7',       // mask
-    Q: '#90CAF9',       // raindrop
-    I: '#D6F2FF',       // snow/ice
-    Y: '#FFD54F',       // sun/sparkle
-    Z: '#6F7BC5',       // zzz
+    S: '#15191F', // sunglasses
+    U: '#4169E1', // umbrella
+    R: '#D64C4C', // scarf
+    N: '#D54A43', // winter hat
+    M: '#EAF3F7', // mask
+    Q: '#90CAF9', // raindrop
+    I: '#D6F2FF', // snow/ice
+    Y: '#FFD54F', // sun/sparkle
+    Z: '#6F7BC5', // zzz
   }
 }
 
@@ -541,10 +545,7 @@ export const overlaySprites = {
     '...........CCC..........',
   ],
 
-  softCrest: [
-    '............CCC.........',
-    '...........CCCCC........',
-  ],
+  softCrest: ['............CCC.........', '...........CCCCC........'],
 
   triceratopsHorns: [
     '........H.....H.........',
@@ -559,11 +560,7 @@ export const overlaySprites = {
     '............HH..........',
   ],
 
-  smallFrill: [
-    '..........PPPPP.........',
-    '.........PPPPPPP........',
-    '.........PPPPP..........',
-  ],
+  smallFrill: ['..........PPPPP.........', '.........PPPPPPP........', '.........PPPPP..........'],
 
   frill: [
     '.........PPPPPPP........',
@@ -622,22 +619,11 @@ export const overlaySprites = {
     '....................HH..',
   ],
 
-  carnoHorns: [
-    '..........H..H..........',
-    '...........HH...........',
-  ],
+  carnoHorns: ['..........H..H..........', '...........HH...........'],
 
-  cryoCrest: [
-    '...........CCCC.........',
-    '..........CCCCCC........',
-    '...........CCCC.........',
-  ],
+  cryoCrest: ['...........CCCC.........', '..........CCCCCC........', '...........CCCC.........'],
 
-  browRidge: [
-    '........................',
-    '............DD..........',
-    '...........D..D.........',
-  ],
+  browRidge: ['........................', '............DD..........', '...........D..D.........'],
 
   bigEye: [
     '........................',
@@ -665,11 +651,7 @@ export const overlaySprites = {
     '.............HH.........',
   ],
 
-  oviCrest: [
-    '..........CCC...........',
-    '.........CCCCC..........',
-    '..........CCC...........',
-  ],
+  oviCrest: ['..........CCC...........', '.........CCCCC..........', '..........CCC...........'],
 
   wingFeathers: [
     '........................',
@@ -726,17 +708,9 @@ export const overlaySprites = {
     '..............HHH.......',
   ],
 
-  pteraCrest: [
-    '...............CCCC.....',
-    '..............CCCCCC....',
-    '...............CCC......',
-  ],
+  pteraCrest: ['...............CCCC.....', '..............CCCCCC....', '...............CCC......'],
 
-  quetzCrest: [
-    '.............CCCCC......',
-    '............CCCCCCC.....',
-    '.............CCCC.......',
-  ],
+  quetzCrest: ['.............CCCCC......', '............CCCCCCC.....', '.............CCCC.......'],
 
   flippers: [
     '........................',
@@ -1037,11 +1011,7 @@ export const accessorySprites = {
     '............MMMM........',
   ],
 
-  sweat: [
-    '................Q.......',
-    '...............QQ.......',
-    '................Q.......',
-  ],
+  sweat: ['................Q.......', '...............QQ.......', '................Q.......'],
 
   rainDrops: [
     '...Q.....Q.......Q......',
@@ -1090,18 +1060,13 @@ function groupFromWmo(code) {
 }
 
 export function getWeatherAccessoryKeys(weather = {}) {
-  const {
-    weatherCode = 0,
-    temp = 20,
-    wind = 0,
-    isNight = false,
-    airQuality = 'good',
-  } = weather
-
-  if (isNight) return ['zzz']
+  const { weatherCode = 0, temp = 20, wind = 0, isNight = false, airQuality = 'good' } = weather
 
   const group = groupFromWmo(weatherCode)
   const keys = []
+
+  // 밤에는 졸음 표시를 얹되, 날씨 액세서리는 그대로 유지한다
+  if (isNight) keys.push('zzz')
 
   if (airQuality === 'bad' || airQuality === 'veryBad') {
     keys.push('mask')
@@ -1111,7 +1076,8 @@ export function getWeatherAccessoryKeys(weather = {}) {
     keys.push('umbrella', 'rainDrops')
   } else if (group === 'snow') {
     keys.push('winterHat', 'scarf', 'snow')
-  } else if (group === 'clear' && temp >= 27) {
+  } else if (group === 'clear' && temp >= 27 && !isNight) {
+    // 선글라스는 낮에만
     keys.push('sunglasses', 'sparkle')
   } else if (group === 'clear') {
     keys.push('sparkle')

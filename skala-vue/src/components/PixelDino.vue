@@ -1,13 +1,7 @@
 <!-- src/components/PixelDino.vue -->
 <script setup>
 import { computed } from 'vue'
-import {
-  GRID_W,
-  GRID_H,
-  createPalette,
-  getDinoGrid,
-  gridToPixels,
-} from '../data/dinoSprites'
+import { GRID_W, GRID_H, createPalette, getDinoGrid, gridToPixels } from '../data/dinoSprites'
 
 const props = defineProps({
   dino: {
@@ -39,9 +33,7 @@ const grid = computed(() => getDinoGrid(props.dino, props.weather))
 const pixels = computed(() => gridToPixels(grid.value, palette.value))
 
 const label = computed(() =>
-  props.dino?.name
-    ? `${props.dino.name} 날씨 마스코트`
-    : '공룡 날씨 마스코트'
+  props.dino?.name ? `${props.dino.name} 날씨 마스코트` : '공룡 날씨 마스코트',
 )
 </script>
 
@@ -92,7 +84,8 @@ const label = computed(() =>
 }
 
 @keyframes dino-idle {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {

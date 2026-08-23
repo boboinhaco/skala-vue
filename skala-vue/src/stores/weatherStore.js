@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 
 const API_URL = 'https://api.openweathermap.org/data/2.5/weather'
+const AIR_URL = 'https://api.openweathermap.org/data/2.5/air_pollution'
 const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY
 const CACHE_DURATION = 5 * 60 * 1000
 
@@ -44,6 +45,9 @@ const createEmptyWeather = (city) => ({
   humidity: null,
   windSpeed: null,
   icon: null,
+  conditionId: null,
+  isNight: false,
+  aqi: null,
 })
 
 export const useWeatherStore = defineStore('weather', () => {
@@ -77,19 +81,29 @@ export const useWeatherStore = defineStore('weather', () => {
     errorMessage.value = ''
 
     try {
-      const results = await Promise.allSettled(
-        CITIES.map((city) =>
-          axios.get(API_URL, {
-            params: {
-              lat: city.lat,
-              lon: city.lon,
-              appid: API_KEY,
-              units: 'metric',
-              lang: 'kr',
-            },
-          }),
+      // 날씨와 대기질을 함께 요청한다 (대기질은 실패해도 날씨 표시에 영향을 주지 않는다)
+      const [results, airResults] = await Promise.all([
+        Promise.allSettled(
+          CITIES.map((city) =>
+            axios.get(API_URL, {
+              params: {
+                lat: city.lat,
+                lon: city.lon,
+                appid: API_KEY,
+                units: 'metric',
+                lang: 'kr',
+              },
+            }),
+          ),
         ),
-      )
+        Promise.allSettled(
+          CITIES.map((city) =>
+            axios.get(AIR_URL, {
+              params: { lat: city.lat, lon: city.lon, appid: API_KEY },
+            }),
+          ),
+        ),
+      ])
 
       let successCount = 0
 
@@ -105,14 +119,24 @@ export const useWeatherStore = defineStore('weather', () => {
 
         successCount++
         const data = result.value.data
+        const condition = data.weather?.[0] ?? null
+        const airResult = airResults[index]
 
         return {
           ...city,
           temp: data.main.temp,
-          status: data.weather?.[0]?.description ?? '정보 없음',
+          status: condition?.description ?? '정보 없음',
           humidity: data.main.humidity,
           windSpeed: data.wind.speed,
-          icon: data.weather?.[0]?.icon ?? null,
+          icon: condition?.icon ?? null,
+          // 공룡 매칭에 필요한 값들
+          conditionId: condition?.id ?? null,
+          // 아이콘 코드가 'n'으로 끝나면 밤 (예: '10n')
+          isNight: condition?.icon?.endsWith('n') ?? false,
+          aqi:
+            airResult?.status === 'fulfilled'
+              ? (airResult.value.data.list?.[0]?.main?.aqi ?? null)
+              : null,
         }
       })
 

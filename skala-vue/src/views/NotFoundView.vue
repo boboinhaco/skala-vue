@@ -8,9 +8,7 @@ import { RouterLink } from 'vue-router'
     <h2>페이지를 찾을 수 없습니다</h2>
     <p>요청하신 주소가 존재하지 않거나 아직 개발되지 않았습니다.</p>
 
-    <RouterLink class="home-link" :to="{ name: 'weather-home' }">
-      날씨 메인으로 이동
-    </RouterLink>
+    <RouterLink class="home-link" :to="{ name: 'weather-home' }"> 날씨 메인으로 이동 </RouterLink>
   </main>
 </template>
 

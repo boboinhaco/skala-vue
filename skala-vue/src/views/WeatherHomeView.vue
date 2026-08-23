@@ -5,6 +5,7 @@ import BaseDashboardCard from '@/components/exercise/BaseDashboardCard.vue'
 import SearchBar from '@/components/exercise/SearchBar.vue'
 import WeatherCard from '@/components/exercise/WeatherCard.vue'
 import UnitToggle from '@/components/exercise/UnitToggle.vue'
+import DinoMascotCard from '@/components/exercise/DinoMascotCard.vue'
 import { useWeatherStore } from '@/stores/weatherStore'
 
 const router = useRouter()
@@ -27,6 +28,16 @@ onMounted(() => {
   weatherStore.fetchWeather()
 })
 
+// 공룡 카드에 보여줄 도시. 선택 전에는 데이터가 들어온 첫 도시를 쓴다
+const selectedCityId = ref(null)
+const selectedWeather = computed(() => {
+  const list = weatherStore.weatherList
+  const selected = list.find((item) => item.id === selectedCityId.value)
+  if (selected && typeof selected.temp === 'number') return selected
+
+  return list.find((item) => typeof item.temp === 'number') ?? null
+})
+
 const selectedCityInfo = ref('카드를 클릭하거나 검색해보세요.')
 watch(selectedCityInfo, (newValue, oldValue) => {
   console.log(`[watch 감지] ${oldValue} → ${newValue}`)
@@ -37,6 +48,7 @@ const handleUpdateQuery = (newQuery) => {
 }
 
 const handleSelectCard = (item) => {
+  selectedCityId.value = item.id
   selectedCityInfo.value = `${item.name}이(가) 선택되었습니다.`
 }
 
@@ -103,6 +115,12 @@ const showDetail = (item) => {
       <p v-if="!weatherStore.isLoading && filteredWeatherList.length === 0" class="empty-message">
         검색 결과와 일치하는 도시가 없습니다.
       </p>
+    </BaseDashboardCard>
+
+    <BaseDashboardCard>
+      <h2>🦕 오늘의 공룡</h2>
+      <p class="dino-hint">위 카드를 클릭하면 해당 도시 날씨에 맞는 공룡으로 바뀝니다.</p>
+      <DinoMascotCard :weather="selectedWeather" />
     </BaseDashboardCard>
 
     <div class="status-bar">{{ selectedCityInfo }}</div>
@@ -187,6 +205,12 @@ h2 {
   color: #34495e;
   font-size: 1.1rem;
   font-weight: 700;
+}
+
+.dino-hint {
+  margin: 0 0 12px;
+  color: #8ba0b2;
+  font-size: 0.8rem;
 }
 
 .status-bar {
