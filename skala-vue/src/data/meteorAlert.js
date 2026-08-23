@@ -68,6 +68,15 @@ export const INDICATORS = {
     breaks: [15, 35, 75, 150],
     words: ['좋음', '보통', '나쁨', '매우 나쁨', '최악'],
   },
+  ozone: {
+    key: 'ozone',
+    label: '오존',
+    unit: '㎍/㎥',
+    estimated: false,
+    // 국내 1시간 기준(0.030 / 0.090 / 0.150 ppm)을 μg/m³ 로 환산한 값
+    breaks: [59, 176, 294, 392],
+    words: ['좋음', '보통', '나쁨', '매우 나쁨', '최악'],
+  },
   rain: {
     key: 'rain',
     label: '강수확률',
@@ -93,16 +102,20 @@ export const THREAT_LEVELS = [
 ]
 
 // 여러 지표 중 가장 나쁜 것이 경보 단계를 정한다 (실제 경보 체계와 같은 방식)
-export function buildMeteorAlert({ weather, forecast = [] }) {
+export function buildMeteorAlert({ weather, forecast = [], air = null }) {
   if (!weather || typeof weather.temp !== 'number') return null
 
-  const uv = estimateUvIndex({ lat: weather.lat, lon: weather.lon, clouds: weather.clouds })
+  // Open-Meteo 실측값이 있으면 그걸 쓰고, 못 받았을 때만 태양 고도로 추정한다
+  const measuredUv = typeof air?.uv === 'number' ? air.uv : null
+  const uv =
+    measuredUv ?? estimateUvIndex({ lat: weather.lat, lon: weather.lon, clouds: weather.clouds })
   // 앞으로 12시간(3시간 간격 4칸) 중 가장 높은 강수확률
   const pop = forecast.length ? Math.max(...forecast.slice(0, 4).map((slot) => slot.pop)) : null
 
   const readings = [
-    { ...INDICATORS.uv, value: uv },
+    { ...INDICATORS.uv, value: uv, estimated: measuredUv === null },
     { ...INDICATORS.dust, value: weather.pm25 },
+    { ...INDICATORS.ozone, value: air?.ozone ?? null },
     { ...INDICATORS.rain, value: pop },
   ].map((item) => {
     const grade = gradeBy(item.value, item.breaks)

@@ -8,9 +8,14 @@ import IndicatorBar from './IndicatorBar.vue'
 const props = defineProps({
   weather: { type: Object, default: null },
   forecast: { type: Array, default: () => [] },
+  // Open-Meteo 로 받은 자외선 실측값 · 오존
+  air: { type: Object, default: null },
+  loading: { type: Boolean, default: false },
 })
 
-const alert = computed(() => buildMeteorAlert({ weather: props.weather, forecast: props.forecast }))
+const alert = computed(() =>
+  buildMeteorAlert({ weather: props.weather, forecast: props.forecast, air: props.air }),
+)
 </script>
 
 <template>
@@ -26,7 +31,12 @@ const alert = computed(() => buildMeteorAlert({ weather: props.weather, forecast
     </div>
 
     <ul class="meteor__list">
-      <IndicatorBar v-for="reading in alert.readings" :key="reading.key" :reading="reading" />
+      <IndicatorBar
+        v-for="reading in alert.readings"
+        :key="reading.key"
+        :reading="reading"
+        :loading="loading"
+      />
     </ul>
 
     <p v-if="alert.driver" class="meteor__driver">

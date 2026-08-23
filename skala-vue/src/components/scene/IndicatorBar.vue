@@ -4,6 +4,8 @@ import { THREAT_LEVELS } from '@/data/meteorAlert'
 // 경보 지표 한 줄: 이름 · 값 · 5칸 막대.
 defineProps({
   reading: { type: Object, required: true },
+  // 값이 없을 때 '아직 받는 중'인지 '못 받았는지'를 구분해서 보여준다
+  loading: { type: Boolean, default: false },
 })
 </script>
 
@@ -18,6 +20,7 @@ defineProps({
         <template v-if="reading.grade !== null">
           {{ reading.value }}{{ reading.unit }} · <b>{{ reading.word }}</b>
         </template>
+        <template v-else-if="loading">불러오는 중...</template>
         <template v-else>자료 없음</template>
       </span>
     </div>

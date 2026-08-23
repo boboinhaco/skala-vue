@@ -30,15 +30,12 @@ const filteredWeatherList = computed(() => {
 const currentScene = computed(() => sceneFor(weatherStore.sceneCode, weatherStore.sceneIsNight))
 const selected = computed(() => weatherStore.selectedWeather)
 
-// 여기서는 앞쪽 몇 곳만 보여준다. 즐겨찾기가 항상 맨 위로 올라오고,
-// 나머지는 '전체 지역' 화면에서 본다.
 const PREVIEW_COUNT = 6
 
 const visibleWeatherList = computed(() => {
   const ordered = favoriteStore.sortFavoritesFirst(filteredWeatherList.value)
   const preview = ordered.slice(0, PREVIEW_COUNT)
 
-  // 지도에서 고른 곳이 잘려 나가면 맨 앞에 끼워 넣는다
   const picked = selected.value
   if (picked && ordered.includes(picked) && !preview.includes(picked)) {
     return [picked, ...preview.slice(0, PREVIEW_COUNT - 1)]
@@ -66,7 +63,6 @@ const handleUpdateQuery = (newQuery) => {
 <template>
   <div class="dashboard">
     <div class="dashboard__cols">
-      <!-- 왼쪽: 전국 지도 (오른쪽 열 높이에 맞춰 늘어난다) -->
       <aside class="dashboard__side">
         <BaseDashboardCard
           title="전국 관측망"
@@ -118,10 +114,15 @@ const handleUpdateQuery = (newQuery) => {
     <div class="dashboard__cols dashboard__cols--extra">
       <BaseDashboardCard
         title="운석 경보"
-        subtitle="자외선 · 미세먼지 · 강수확률"
+        subtitle="자외선 · 미세먼지 · 오존 · 강수확률"
         class="extra-card"
       >
-        <MeteorAlertCard :weather="selected" :forecast="weatherStore.selectedForecast" />
+        <MeteorAlertCard
+          :weather="selected"
+          :forecast="weatherStore.selectedForecast"
+          :air="weatherStore.selectedOpenMeteo"
+          :loading="weatherStore.isOpenMeteoLoading"
+        />
       </BaseDashboardCard>
 
       <BaseDashboardCard
@@ -132,11 +133,11 @@ const handleUpdateQuery = (newQuery) => {
         <FootprintTimeline
           :slots="weatherStore.selectedForecast"
           :loading="weatherStore.isForecastLoading"
+          :daily="weatherStore.selectedOpenMeteo"
         />
       </BaseDashboardCard>
     </div>
 
-    <!-- 좌우를 가로지르는 공룡 무대. 배경이 그대로 비쳐 보인다 -->
     <section class="dino-stage">
       <DinoMascotCard :weather="selected" transparent />
     </section>
@@ -144,8 +145,6 @@ const handleUpdateQuery = (newQuery) => {
 </template>
 
 <style scoped>
-/* 좌우 두 열은 같은 높이로. grid가 알아서 늘려주고,
-   높이는 내용이 더 많은 오른쪽(지역 검색 + 시도별 관측소)이 정한다. */
 .dashboard__cols {
   display: grid;
   align-items: stretch;
@@ -157,8 +156,6 @@ const handleUpdateQuery = (newQuery) => {
   min-width: 0;
 }
 
-/* 지도 카드가 오른쪽 열 높이를 그대로 따라가고,
-   남는 공간은 지도가 커지면서 채운다 */
 .map-card {
   height: 100%;
   margin-bottom: 0;
@@ -181,7 +178,6 @@ const handleUpdateQuery = (newQuery) => {
   margin-bottom: 0;
 }
 
-/* 둘째 줄도 두 카드 높이를 맞춘다 (내용이 많은 운석 경보가 기준) */
 .dashboard__cols--extra {
   margin-top: 18px;
 }
@@ -197,7 +193,6 @@ const handleUpdateQuery = (newQuery) => {
   flex-direction: column;
 }
 
-/* 남는 세로 공간에서는 내용을 가운데에 둔다 */
 .extra-card :deep(.p-card-content) {
   display: flex;
   flex: 1;
@@ -205,7 +200,6 @@ const handleUpdateQuery = (newQuery) => {
   justify-content: center;
 }
 
-/* 공룡은 카드 밖으로 나와 배경 위에 선다 */
 .dino-stage {
   margin-top: 6px;
 }

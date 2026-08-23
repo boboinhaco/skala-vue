@@ -6,6 +6,11 @@ import { toWmoCode } from '@/data/openWeatherToWmo'
 const API_URL = 'https://api.openweathermap.org/data/2.5/weather'
 const AIR_URL = 'https://api.openweathermap.org/data/2.5/air_pollution'
 const FORECAST_URL = 'https://api.openweathermap.org/data/2.5/forecast'
+
+// Open-Meteo — 키가 필요 없고 CORS가 열려 있는 외부 API.
+// OpenWeather 무료 키로는 못 받는 자외선 실측값과 오존을 여기서 받는다.
+const OPEN_METEO_AIR_URL = 'https://air-quality-api.open-meteo.com/v1/air-quality'
+const OPEN_METEO_DAILY_URL = 'https://api.open-meteo.com/v1/forecast'
 // 예보는 지금 보고 있는 지역 한 곳만 받는다 (17곳 전부 받으면 요청이 너무 늘어난다)
 const FORECAST_SLOTS = 8
 const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY
@@ -158,6 +163,59 @@ export const useWeatherStore = defineStore('weather', () => {
     }
   }
 
+  // ── Open-Meteo (보고 있는 지역만) ─────────────────────────
+  // 자외선 실측값 · 오존 · 오늘의 최고/최저 기온
+  const openMeteoByCity = ref({})
+  const isOpenMeteoLoading = ref(false)
+
+  const fetchOpenMeteo = async (cityId) => {
+    const city = CITIES.find((item) => item.id === cityId)
+    if (!city) return
+
+    const cached = openMeteoByCity.value[cityId]
+    if (cached && Date.now() - cached.fetchedAt < CACHE_DURATION) return
+
+    isOpenMeteoLoading.value = true
+    const common = { latitude: city.lat, longitude: city.lon, timezone: 'Asia/Seoul' }
+
+    try {
+      const [air, daily] = await Promise.all([
+        axios.get(OPEN_METEO_AIR_URL, {
+          params: { ...common, current: 'ozone,uv_index' },
+        }),
+        axios.get(OPEN_METEO_DAILY_URL, {
+          params: {
+            ...common,
+            daily: 'temperature_2m_max,temperature_2m_min,uv_index_max',
+            forecast_days: 1,
+          },
+        }),
+      ])
+
+      const now = air.data.current ?? {}
+      const today = daily.data.daily ?? {}
+
+      openMeteoByCity.value = {
+        ...openMeteoByCity.value,
+        [cityId]: {
+          fetchedAt: Date.now(),
+          uv: typeof now.uv_index === 'number' ? now.uv_index : null,
+          ozone: typeof now.ozone === 'number' ? now.ozone : null,
+          tempMax: today.temperature_2m_max?.[0] ?? null,
+          tempMin: today.temperature_2m_min?.[0] ?? null,
+          uvMax: today.uv_index_max?.[0] ?? null,
+        },
+      }
+    } catch (error) {
+      // 못 받아도 자외선은 태양 고도로 추정하고, 최고/최저는 표시만 생략한다
+      console.error('Open-Meteo 요청 실패:', error)
+    } finally {
+      isOpenMeteoLoading.value = false
+    }
+  }
+
+  const selectedOpenMeteo = computed(() => openMeteoByCity.value[selectedWeather.value?.id] ?? null)
+
   // ── 시간별 예보 (보고 있는 지역만) ─────────────────────────
   const forecasts = ref({})
   const isForecastLoading = ref(false)
@@ -214,6 +272,7 @@ export const useWeatherStore = defineStore('weather', () => {
 
       fetchForecast(cityId)
       fetchAir(cityId)
+      fetchOpenMeteo(cityId)
     },
     { immediate: true },
   )
@@ -322,5 +381,8 @@ export const useWeatherStore = defineStore('weather', () => {
     isForecastLoading,
     fetchForecast,
     fetchAir,
+    selectedOpenMeteo,
+    isOpenMeteoLoading,
+    fetchOpenMeteo,
   }
 })
