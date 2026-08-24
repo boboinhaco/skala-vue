@@ -61,12 +61,13 @@
   right: -8px;
 }
 
+/* 스프라이트가 96px 고정이라 좁은 화면에서는 간격만 줄인다 */
 @media (max-width: 680px) {
-  .brand__text strong {
-    font-size: 22px;
+  .brand {
+    gap: 8px;
   }
 
-  .brand__dino {
-    width: 64px;
+  .brand__text strong {
+    font-size: 22px;
   }
 }

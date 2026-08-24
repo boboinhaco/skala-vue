@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import PixelDino from '@/components/PixelDino.vue'
+import DinoMascot from '@/components/DinoMascot.vue'
 import { matchDino } from '@/data/matchDino'
 
 // 어떤 날씨에 어떤 공룡이 나오는지 보여주는 예시.
@@ -18,6 +18,7 @@ const picks = computed(() =>
       weather: sample.weather,
       dino: best,
       name: best.name,
+      accent: best.accent,
       comment: best.comment,
     }
   }),
@@ -28,10 +29,15 @@ const picks = computed(() =>
   <ul class="showcase">
     <li v-for="pick in picks" :key="pick.key">
       <div class="showcase__figure">
-        <PixelDino :dino="pick.dino" :weather="pick.weather" :size="120" :animate="false" />
+        <DinoMascot
+          :dino-id="pick.dino.id"
+          :weather="pick.weather"
+          :scale="1"
+          :alt="`${pick.name} 마스코트`"
+        />
       </div>
       <p class="showcase__when">{{ pick.label }}</p>
-      <h4>{{ pick.name }}</h4>
+      <h4 :style="{ color: pick.accent }">{{ pick.name }}</h4>
       <p class="showcase__comment">{{ pick.comment }}</p>
     </li>
   </ul>
@@ -55,7 +61,7 @@ const picks = computed(() =>
 
 .showcase__figure {
   display: flex;
-  height: 100px;
+  height: 96px;
   align-items: flex-end;
   justify-content: center;
   overflow: hidden;

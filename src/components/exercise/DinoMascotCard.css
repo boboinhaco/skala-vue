@@ -150,26 +150,6 @@
   }
 }
 
-/* 계단식 픽셀 그림자 */
-.dino-card__shadow {
-  position: absolute;
-  left: 50%;
-  width: 150px;
-  height: 6px;
-  background: rgb(4 7 14 / 34%);
-  transform: translateX(-50%);
-}
-
-.dino-card__shadow::before {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 18px;
-  width: 114px;
-  height: 4px;
-  background: rgb(4 7 14 / 22%);
-}
-
 /* 잔디처럼 밝은 배경 위에서도 읽히도록 외곽선을 준다 */
 .dino-card--bare .eyebrow,
 .dino-card--bare .tip,

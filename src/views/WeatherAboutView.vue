@@ -26,9 +26,11 @@ const SCENES = [
 
 // 공룡이 어떻게 갈리는지 보여줄 날씨 예시
 const DINO_SAMPLES = [
-  { label: '비 오는 날', weather: { temp: 20, humidity: 85, weatherCode: 63, wind: 10 } },
-  { label: '눈 오는 날', weather: { temp: -2, humidity: 70, weatherCode: 71, wind: 12 } },
   { label: '맑고 더운 날', weather: { temp: 33, humidity: 45, weatherCode: 0, wind: 8 } },
+  { label: '비 오는 날', weather: { temp: 20, humidity: 85, weatherCode: 63, wind: 10 } },
+  { label: '뇌우 치는 날', weather: { temp: 24, humidity: 85, weatherCode: 95, wind: 15 } },
+  { label: '안개 낀 날', weather: { temp: 15, humidity: 90, weatherCode: 45, wind: 3 } },
+  { label: '눈 오는 날', weather: { temp: -2, humidity: 70, weatherCode: 71, wind: 12 } },
   { label: '바람 부는 날', weather: { temp: 15, humidity: 50, weatherCode: 1, wind: 35 } },
 ]
 
@@ -57,7 +59,11 @@ const TECH = [
   { name: 'Vue Router', body: '화면마다 주소가 있고, 필요한 순간에만 코드를 내려받습니다.' },
   { name: 'Axios', body: '여러 지역을 한 번에 요청하고, 실패한 곳만 따로 처리합니다.' },
   { name: 'PrimeVue', body: '버튼·카드·입력창을 가져다 픽셀 테마로 다시 칠했습니다.' },
-  { name: 'SVG 픽셀 그래픽', body: '배경·지도·공룡·발자국을 격자 위에 직접 그렸습니다.' },
+  { name: 'SVG 픽셀 그래픽', body: '배경·지도·발자국을 격자 위에 직접 그렸습니다.' },
+  {
+    name: '96×72 도트 스프라이트',
+    body: '공룡 9종은 픽셀 이미지로 그리고, 우산·목도리 같은 소품만 SVG로 얹습니다.',
+  },
 ]
 
 const moveToHome = () => {
@@ -93,9 +99,9 @@ const moveToHome = () => {
       :subtitle="`${dinos.length}종 중에서 그날 날씨에 가장 잘 맞는 한 마리`"
     >
       <p class="about-text">
-        공룡마다 살던 환경이 다릅니다. 물가에 살던 공룡, 깃털로 추위를 견디던 공룡, 바람을 타고 날던
-        공룡이 각각 있습니다. 그래서 <strong>기온 · 습도 · 풍속 · 날씨 상태</strong>를 점수로 매겨
-        그날 가장 잘 맞는 한 마리를 고릅니다.
+        공룡마다 살던 환경이 다릅니다. 물가에 살던 공룡, 갑옷으로 추위를 견디던 공룡, 골판으로 열을
+        식히던 공룡이 각각 있습니다. 그래서 <strong>기온 · 습도 · 풍속 · 날씨 상태</strong>를 점수로
+        매겨 그날 가장 잘 맞는 한 마리를 고릅니다.
       </p>
 
       <DinoShowcase :samples="DINO_SAMPLES" />
@@ -103,8 +109,11 @@ const moveToHome = () => {
       <Divider />
 
       <p class="about-text">
-        고른 공룡은 날씨에 따라 <strong>우산을 쓰고, 선글라스를 끼고, 목도리를 두릅니다.</strong>
-        추우면 덜덜 떨고, 더우면 헐떡이고, 밤에는 졸기 시작합니다.
+        고른 공룡은 날씨에 따라
+        <strong
+          >우산을 쓰고, 선글라스를 끼고, 목도리를 두르고, 미세먼지가 심하면 마스크를 씁니다.</strong
+        >
+        추우면 덜덜 떨고, 더우면 헐떡이고, 바람이 세면 몸을 기울이고, 밤에는 졸기 시작합니다.
       </p>
       <p class="px-dim">
         점수는 날씨 상태가 맞으면 40점, 좋아하는 기온 구간이면 30점, 습도 성향이 맞으면 15점, 바람

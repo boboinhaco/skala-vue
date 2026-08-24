@@ -21,6 +21,17 @@ export default defineConfig([
     },
   },
 
+  // art/ 의 에셋 빌드 스크립트는 브라우저가 아니라 Node 에서 돈다
+  {
+    name: 'app/node-scripts',
+    files: ['art/**/*.mjs'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+    },
+  },
+
   js.configs.recommended,
   ...pluginVue.configs['flat/essential'],
 

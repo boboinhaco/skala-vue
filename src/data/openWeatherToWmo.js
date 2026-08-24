@@ -93,7 +93,8 @@ export function aqiToAirQuality(aqi) {
   return 'good'
 }
 
-// 스토어의 도시 날씨 항목 하나를 matchDino / PixelDino 입력 형태로 변환한다
+// 스토어의 도시 날씨 항목 하나를 matchDino / DinoMascot 입력 형태로 변환한다.
+// pm25 는 마스크를 씌울지 정하는 값이라 원본 수치를 그대로 넘긴다.
 export function toDinoWeather(item) {
   if (!item || typeof item.temp !== 'number') return null
 
@@ -104,5 +105,6 @@ export function toDinoWeather(item) {
     wind: msToKmh(item.windSpeed),
     isNight: Boolean(item.isNight),
     airQuality: aqiToAirQuality(item.aqi),
+    pm25: typeof item.pm25 === 'number' ? item.pm25 : 0,
   }
 }
